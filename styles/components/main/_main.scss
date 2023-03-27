@@ -4,9 +4,21 @@
 }
 
 body {
-    margin: 20px;
+    margin: 0;
 }
 
-section {
-    margin-bottom: 32px;
+#main {
+    display: flex;
+    flex-direction: row;
+
+    #ui {
+        width: 440px;
+        min-height: 100vh;
+        padding: 20px;
+        background: $color-lightgrey;
+    }
+
+    #preview {
+        width: calc(100% - 440px);
+    }
 }

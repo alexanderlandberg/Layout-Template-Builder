@@ -4,11 +4,21 @@
 }
 
 body {
-  margin: 20px;
+  margin: 0;
 }
 
-section {
-  margin-bottom: 32px;
+#main {
+  display: flex;
+  flex-direction: row;
+}
+#main #ui {
+  width: 440px;
+  min-height: 100vh;
+  padding: 20px;
+  background: #EEEEEE;
+}
+#main #preview {
+  width: calc(100% - 440px);
 }
 
 h4 {
@@ -41,10 +51,162 @@ form * {
 
 form textarea {
   width: 100%;
-  height: 200px;
 }
 
-#preview {
+#module-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#module-list li {
+  position: relative;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px #4199D4 solid;
+  color: #4199D4;
+  border-radius: 4px;
+  margin: 0 8px 8px 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  background: #FFFFFF;
+}
+#module-list li.hint {
+  border: 1px solid #FFFFFF;
+}
+#module-list li.active {
+  border: 1px solid #000000;
+}
+
+.ui-row {
+  margin-bottom: 16px;
+}
+.ui-row::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.ui-col {
+  float: left;
+  margin: 0 16px 16px 0;
+}
+
+.label {
+  color: #000000;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.switch {
+  border: 1px #4199D4 solid;
+  border-radius: 6px;
+  display: inline-flex;
+  background: #FFFFFF;
+}
+.switch > span {
+  display: inline-block;
+}
+.switch > span > label {
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #4199D4;
+  cursor: pointer;
+  border-radius: 4px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.switch > span > label:hover {
+  background: rgba(65, 153, 212, 0.2);
+}
+.switch > span > input:checked ~ label {
+  color: #FFFFFF;
+  background-color: #4199D4;
+}
+.switch input {
+  display: none;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.button {
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px #4199D4 solid;
+  color: #4199D4;
+  background: #FFFFFF;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0 8px 8px 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.button:hover {
+  color: #FFFFFF;
+  background-color: #4199D4;
+}
+.button:active {
+  background-color: #2572a4;
+}
+
+.toggle input {
+  display: none;
+}
+.toggle label {
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  width: 56px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px #4199D4 solid;
+  border-radius: 15px;
+  margin: 0 8px 8px 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  background: #FFFFFF;
+}
+.toggle span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  height: 22px;
+  width: 22px;
+  background-color: #4199D4;
+  display: block;
+  border-radius: 50%;
+}
+.toggle input:checked ~ label {
+  background: #4199D4;
+}
+.toggle input:checked ~ label span {
+  background-color: #FFFFFF;
+  left: 29px;
+}
+
+#preview-ui {
+  padding: 20px;
+  background: #CCCCCC;
+}
+
+#iframe {
   width: 100%;
   height: 50vw;
   min-height: 600px;
@@ -59,19 +221,19 @@ iframe {
   transform-origin: 0 0;
 }
 
-#preview[data-size=mobile] {
+#iframe[data-size=mobile] {
   max-width: 370px;
 }
 
-#preview[data-size=tablet] {
+#iframe[data-size=tablet] {
   max-width: 720px;
 }
 
-#preview[data-size=full] {
+#iframe[data-size=full] {
   max-width: 100%;
 }
 
-#preview[data-scale="25"] iframe {
+#iframe[data-scale="25"] iframe {
   -ms-zoom: 0.25;
   zoom: 0.25;
   transform: scale(0.25);
@@ -79,7 +241,7 @@ iframe {
   height: 400%;
 }
 
-#preview[data-scale="50"] iframe {
+#iframe[data-scale="50"] iframe {
   -ms-zoom: 0.5;
   zoom: 0.5;
   transform: scale(0.5);
@@ -87,7 +249,7 @@ iframe {
   height: 200%;
 }
 
-#preview[data-scale="75"] iframe {
+#iframe[data-scale="75"] iframe {
   -ms-zoom: 0.75;
   zoom: 0.75;
   transform: scale(0.75);

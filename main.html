@@ -11,218 +11,224 @@
 
 <body>
     <div id="main">
-        <section>
-            <style>
-                /* (A) LIST STYLES */
-                #module-list {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                }
-
-                #module-list li {
-                    margin: 10px;
-                    padding: 15px;
-                    border: 1px solid #dfdfdf;
-                    background: #f5f5f5;
-                }
-
-                /* (B) DRAG-AND-DROP HINT */
-                #module-list li.hint {
-                    border: 1px solid #ffc49a;
-                    background: #feffb4;
-                }
-
-                #module-list li.active {
-                    border: 1px solid #ffa5a5;
-                    background: #ffe7e7;
-                }
-            </style>
-            <script>
-                function slist(target) {
-                    // (A) SET CSS + GET ALL LIST ITEMS
-                    target.classList.add("slist");
-                    let items = target.getElementsByTagName("li"), current = null;
-
-                    // (B) MAKE ITEMS DRAGGABLE + SORTABLE
-                    for (let i of items) {
-                        // (B1) ATTACH DRAGGABLE
-                        i.draggable = true;
-
-                        // (B2) DRAG START - YELLOW HIGHLIGHT DROPZONES
-                        i.ondragstart = e => {
-                            current = i;
-                            for (let it of items) {
-                                if (it != current) { it.classList.add("hint"); }
-                            }
-                        };
-
-                        // (B3) DRAG ENTER - RED HIGHLIGHT DROPZONE
-                        i.ondragenter = e => {
-                            if (i != current) { i.classList.add("active"); }
-                        };
-
-                        // (B4) DRAG LEAVE - REMOVE RED HIGHLIGHT
-                        i.ondragleave = () => i.classList.remove("active");
-
-                        // (B5) DRAG END - REMOVE ALL HIGHLIGHTS
-                        i.ondragend = () => {
-                            for (let it of items) {
-                                it.classList.remove("hint");
-                                it.classList.remove("active");
-                            }
-                        };
-
-                        // (B6) DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
-                        i.ondragover = e => e.preventDefault();
-
-                        // (B7) ON DROP - DO SOMETHING
-                        i.ondrop = e => {
-                            e.preventDefault();
-                            if (i != current) {
-                                let currentpos = 0, droppedpos = 0;
-                                for (let it = 0; it < items.length; it++) {
-                                    if (current == items[it]) { currentpos = it; }
-                                    if (i == items[it]) { droppedpos = it; }
-                                }
-                                if (currentpos < droppedpos) {
-                                    i.parentNode.insertBefore(current, i.nextSibling);
-                                } else {
-                                    i.parentNode.insertBefore(current, i);
-                                }
-                            }
-                            // reorder module list
-                            console.log("REORDER");
-                            const sortList = document.querySelector("#module-list");
-                            let sortListNewOrder = [];
-                            for (let i = 0; i < sortList.children.length; i++) {
-                                sortListNewOrder.push(sortList.children[i].innerHTML);
-                            }
-                            state.modules = sortListNewOrder;
-                            render();
-                        };
-                    }
-                }
-            </script>
-            <ul id="module-list">
-            </ul>
-            <script>
-                slist(document.querySelector("#module-list"));
-            </script>
-        </section>
-        <section>
-            <h4>Form</h4>
-            <form onsubmit="download(this['name'].value, this['text'].value)" target="_new">
-                <input type="text" name="name" value="template-test.html">
-                <textarea id="fileText" name="text"></textarea>
-                <input type="submit" value="Download">
-            </form>
-        </section>
-        <section>
-            <h4>Headers</h4>
-            <div>
-                <div class="btn" onclick="addHeader('header')">
-                    Add Header
-                </div>
-                <div class="btn" onclick="addHeader('hero')">
-                    Add Hero
+        <div id="ui">
+            <div class="ui-row">
+                <div class="label">Header</div>
+                <div class="switch">
+                    <span>
+                        <input id="switch-header-1" type="radio" name="switch-header" checked="checked" onclick="addHeader('header')">
+                        <label for="switch-header-1">
+                            header
+                        </label>
+                    </span>
+                    <span>
+                        <input id="switch-header-2" type="radio" name="switch-header" onclick="addHeader('hero')">
+                        <label for="switch-header-2">
+                            hero
+                        </label>
+                    </span>
                 </div>
             </div>
-            <h4>Modules</h4>
-            <div>
-                <div class="btn" onclick="addModule('dynamicHero')">
-                    Add Dynamic Hero
-                </div>
-                <div class="btn" onclick="addModule('imageProduct')">
-                    Add Image Product
-                </div>
-                <div class="btn" onclick="addModule('imageForm')">
-                    Add Image Form
-                </div>
-                <div class="btn" onclick="addModule('textForm')">
-                    Add Text Form
-                </div>
-                <div class="btn" onclick="addModule('spacer')">
-                    Add Spacer
-                </div>
-                <div class="btn" onclick="addModule('intro')">
-                    Add Intro
-                </div>
-                <div class="btn" onclick="addModule('statementA')">
-                    Add Statement A
-                </div>
-                <div class="btn" onclick="addModule('statementB')">
-                    Add Statement B
-                </div>
-                <div class="btn" onclick="addModule('cards')">
-                    Add Cards
-                </div>
-                <div class="btn" onclick="addModule('infographics')">
-                    Add Infographics
-                </div>
-                <div class="btn" onclick="addModule('article')">
-                    Add Article
-                </div>
-                <div class="btn" onclick="addModule('articleTwoColumn')">
-                    Add Article Two Column
-                </div>
-                <div class="btn" onclick="addModule('sideBySide')">
-                    Add Side By Side
-                </div>
-                <div class="btn" onclick="addModule('keyNumbers')">
-                    Add Key Numbers
-                </div>
-                <div class="btn" onclick="addModule('contactForm')">
-                    Add Contact Form
+            <div class="ui-row">
+                <div class="label">Modules</div>
+                <div class="button-group">
+                    <div class="button" onclick="addModule('dynamicHero')">Dynamic Hero +</div>
+                    <div class="button" onclick="addModule('imageProduct')">Image Product +</div>
+                    <div class="button" onclick="addModule('imageForm')">Image Form +</div>
+                    <div class="button" onclick="addModule('textForm')">Text Form +</div>
+                    <div class="button" onclick="addModule('spacer')">Spacer +</div>
+                    <div class="button" onclick="addModule('intro')">Intro +</div>
+                    <div class="button" onclick="addModule('statementA')">Statement A +</div>
+                    <div class="button" onclick="addModule('statementB')">Statement B +</div>
+                    <div class="button" onclick="addModule('cards')">Cards +</div>
+                    <div class="button" onclick="addModule('infographics')">Infographics +</div>
+                    <div class="button" onclick="addModule('article')">Article +</div>
+                    <div class="button" onclick="addModule('articleTwoColumn')">Article Two Column +</div>
+                    <div class="button" onclick="addModule('sideBySide')">Side By Side +</div>
+                    <div class="button" onclick="addModule('keyNumbers')">Key Numbers +</div>
+                    <div class="button" onclick="addModule('contactForm')">Contact Form +</div>
                 </div>
             </div>
-            <h4>Footers</h4>
-            <div>
-                <div class="btn" onclick="addFooter('footer')">
-                    Add Footer
+            <div class="ui-row">
+                <div class="label">Module List</div>
+                <ul id="module-list"></ul>
+            </div>
+            <div class="ui-row">
+                <div class="ui-col">
+                    <div class="label">Footers</div>
+                    <div class="switch">
+                        <span>
+                            <input id="switch-footer-1" type="radio" name="switch-footer" checked="checked" onclick="addFooter('footer')">
+                            <label for="switch-footer-1">
+                                ENG
+                            </label>
+                        </span>
+                        <span>
+                            <input id="switch-footer-2" type="radio" name="switch-footer" onclick="addFooter('footer')">
+                            <label for="switch-footer-2">
+                                DK
+                            </label>
+                        </span>
+                        <span>
+                            <input id="switch-footer-3" type="radio" name="switch-footer" onclick="addFooter('footer')">
+                            <label for="switch-footer-3">
+                                ES
+                            </label>
+                        </span>
+                    </div>
                 </div>
-                <div class="btn" onclick="addLegal('legal')">
-                    Add Legal
+                <div class="ui-col">
+                    <div class="label">Legal</div>
+                    <div class="toggle">
+                        <input id="toggle-legal" type="checkbox" onclick="addLegal('legal')">
+                        <label for="toggle-legal">
+                            <span></span>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </section>
-        <section>
-            <h4>Preview</h4>
-            <div class="btn" onclick="preview()">
-                Preview
-            </div>
-            <h4>Screen size</h4>
-            <div>
-                <div class="btn" onclick="previewSize('mobile')">
-                    Mobile
-                </div>
-                <div class="btn" onclick="previewSize('tablet')">
-                    Tablet
-                </div>
-                <div class="btn" onclick="previewSize('full')">
-                    Full Width
-                </div>
-            </div>
-            <h4>Zoom</h4>
-            <div>
-                <div class="btn" onclick="previewScale('25')">
-                    25%
-                </div>
-                <div class="btn" onclick="previewScale('50')">
-                    50%
-                </div>
-                <div class="btn" onclick="previewScale('75')">
-                    75%
-                </div>
-                <div class="btn" onclick="previewScale('100')">
-                    100%
-                </div>
-            </div>
-        </section>
-    </div>
 
-    <div id="preview-wrap">
-        <div id="preview"></div>
+            <div id="ui-test" style="display: none;">
+                <section>
+
+                </section>
+                <section>
+                    <h4>Form</h4>
+                    <form onsubmit="download(this['name'].value, this['text'].value)" target="_new">
+                        <input type="text" name="name" value="template-test.html">
+                        <textarea id="fileText" name="text"></textarea>
+                        <input type="submit" value="Download">
+                    </form>
+                </section>
+                <section>
+                    <h4>Headers</h4>
+                    <div>
+                        <div class="btn" onclick="addHeader('header')">
+                            Add Header
+                        </div>
+                        <div class="btn" onclick="addHeader('hero')">
+                            Add Hero
+                        </div>
+                    </div>
+                    <h4>Modules</h4>
+                    <div>
+                        <div class="btn" onclick="addModule('dynamicHero')">
+                            Add Dynamic Hero
+                        </div>
+                        <div class="btn" onclick="addModule('imageProduct')">
+                            Add Image Product
+                        </div>
+                        <div class="btn" onclick="addModule('imageForm')">
+                            Add Image Form
+                        </div>
+                        <div class="btn" onclick="addModule('textForm')">
+                            Add Text Form
+                        </div>
+                        <div class="btn" onclick="addModule('spacer')">
+                            Add Spacer
+                        </div>
+                        <div class="btn" onclick="addModule('intro')">
+                            Add Intro
+                        </div>
+                        <div class="btn" onclick="addModule('statementA')">
+                            Add Statement A
+                        </div>
+                        <div class="btn" onclick="addModule('statementB')">
+                            Add Statement B
+                        </div>
+                        <div class="btn" onclick="addModule('cards')">
+                            Add Cards
+                        </div>
+                        <div class="btn" onclick="addModule('infographics')">
+                            Add Infographics
+                        </div>
+                        <div class="btn" onclick="addModule('article')">
+                            Add Article
+                        </div>
+                        <div class="btn" onclick="addModule('articleTwoColumn')">
+                            Add Article Two Column
+                        </div>
+                        <div class="btn" onclick="addModule('sideBySide')">
+                            Add Side By Side
+                        </div>
+                        <div class="btn" onclick="addModule('keyNumbers')">
+                            Add Key Numbers
+                        </div>
+                        <div class="btn" onclick="addModule('contactForm')">
+                            Add Contact Form
+                        </div>
+                    </div>
+                    <h4>Footers</h4>
+                    <div>
+                        <div class="btn" onclick="addFooter('footer')">
+                            Add Footer
+                        </div>
+                        <div class="btn" onclick="addLegal('legal')">
+                            Add Legal
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="preview">
+            <div id="preview-ui">
+                <div class="ui-row">
+                    <div class="ui-col">
+                        <div class="label">Screen size</div>
+                        <div class="switch">
+                            <span>
+                                <input id="switch-screensize-3" type="radio" name="switch-screensize" onclick="previewSize('full')" checked="checked">
+                                <label for="switch-screensize-3">
+                                    Full Width
+                                </label>
+                            </span>
+                            <span>
+                                <input id="switch-screensize-2" type="radio" name="switch-screensize" onclick="previewSize('tablet')">
+                                <label for="switch-screensize-2">
+                                    Tablet
+                                </label>
+                            </span>
+                            <span>
+                                <input id="switch-screensize-1" type="radio" name="switch-screensize" onclick="previewSize('mobile')">
+                                <label for="switch-screensize-1">
+                                    Mobile
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="ui-col">
+                        <div class="label">Zoom</div>
+                        <div class="switch">
+                            <span>
+                                <input id="switch-zoom-4" type="radio" name="switch-zoom" onclick="previewScale('100')" checked="checked">
+                                <label for="switch-zoom-4">
+                                    100%
+                                </label>
+                            </span>
+                            <span>
+                                <input id="switch-zoom-3" type="radio" name="switch-zoom" onclick="previewScale('75')">
+                                <label for="switch-zoom-3">
+                                    75%
+                                </label>
+                            </span>
+                            <span>
+                                <input id="switch-zoom-2" type="radio" name="switch-zoom" onclick="previewScale('50')">
+                                <label for="switch-zoom-2">
+                                    50%
+                                </label>
+                            </span>
+                            <span>
+                                <input id="switch-zoom-1" type="radio" name="switch-zoom" onclick="previewScale('25')">
+                                <label for="switch-zoom-1">
+                                    25%
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="iframe"></div>
+        </div>
     </div>
 
     <script src="./scripts/main.js"></script>

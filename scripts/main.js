@@ -25,6 +25,9 @@ async function render() {
 
     // update file for download
     await updateFile();
+
+    // update preview
+    preview();
 }
 
 async function updateModuleList() {
@@ -80,7 +83,6 @@ async function buildTemplate() {
 async function updateFile() {
     console.log("update file")
     fileText.value = layoutTemplate;
-    console.log(layoutTemplate)
 }
 
 async function download(filename, text) {
@@ -96,9 +98,9 @@ async function download(filename, text) {
     document.body.removeChild(element);
 }
 
-async function preview() {
+function preview() {
     console.log("preview")
-    const previewContainer = document.querySelector("#preview");
+    const previewContainer = document.querySelector("#iframe");
     previewContainer.innerHTML = "";
     const iframe = document.createElement('iframe');
     const removeScroll = `<style type="text/css">body::-webkit-scrollbar{display:none;}body{-ms-overflow-style:none;scrollbar-width:none;}</style>`
@@ -107,11 +109,76 @@ async function preview() {
     iframe.contentWindow.document.write(layoutTemplate + removeScroll);
     iframe.contentWindow.document.close();
 }
-async function previewSize(size) {
-    const previewContainer = document.querySelector("#preview");
+function previewSize(size) {
+    const previewContainer = document.querySelector("#iframe");
     previewContainer.setAttribute("data-size", `${size}`)
 }
-async function previewScale(scale) {
-    const previewContainer = document.querySelector("#preview");
+function previewScale(scale) {
+    const previewContainer = document.querySelector("#iframe");
     previewContainer.setAttribute("data-scale", `${scale}`)
+}
+
+async function slist(target) {
+    // (A) SET CSS + GET ALL LIST ITEMS
+    target.classList.add("slist");
+    let items = target.getElementsByTagName("li"), current = null;
+
+    // (B) MAKE ITEMS DRAGGABLE + SORTABLE
+    for (let i of items) {
+        // (B1) ATTACH DRAGGABLE
+        i.draggable = true;
+
+        // (B2) DRAG START - YELLOW HIGHLIGHT DROPZONES
+        i.ondragstart = e => {
+            current = i;
+            for (let it of items) {
+                if (it != current) { it.classList.add("hint"); }
+            }
+        };
+
+        // (B3) DRAG ENTER - RED HIGHLIGHT DROPZONE
+        i.ondragenter = e => {
+            if (i != current) { i.classList.add("active"); }
+        };
+
+        // (B4) DRAG LEAVE - REMOVE RED HIGHLIGHT
+        i.ondragleave = () => i.classList.remove("active");
+
+        // (B5) DRAG END - REMOVE ALL HIGHLIGHTS
+        i.ondragend = () => {
+            for (let it of items) {
+                it.classList.remove("hint");
+                it.classList.remove("active");
+            }
+        };
+
+        // (B6) DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
+        i.ondragover = e => e.preventDefault();
+
+        // (B7) ON DROP - DO SOMETHING
+        i.ondrop = e => {
+            e.preventDefault();
+            if (i != current) {
+                let currentpos = 0, droppedpos = 0;
+                for (let it = 0; it < items.length; it++) {
+                    if (current == items[it]) { currentpos = it; }
+                    if (i == items[it]) { droppedpos = it; }
+                }
+                if (currentpos < droppedpos) {
+                    i.parentNode.insertBefore(current, i.nextSibling);
+                } else {
+                    i.parentNode.insertBefore(current, i);
+                }
+            }
+            // reorder module list
+            console.log("REORDER");
+            const sortList = document.querySelector("#module-list");
+            let sortListNewOrder = [];
+            for (let i = 0; i < sortList.children.length; i++) {
+                sortListNewOrder.push(sortList.children[i].innerHTML);
+            }
+            state.modules = sortListNewOrder;
+            render();
+        };
+    }
 }
