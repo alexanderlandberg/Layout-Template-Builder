@@ -57,6 +57,13 @@ form textarea {
   list-style: none;
   padding: 0;
   margin: 0;
+  border-radius: 4px;
+  background: white;
+  border: 1px #4199D4 solid;
+  opacity: 0;
+}
+#module-list.slist {
+  opacity: 1;
 }
 #module-list li {
   position: relative;
@@ -64,21 +71,23 @@ form textarea {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  border: 1px #4199D4 solid;
   color: #4199D4;
-  border-radius: 4px;
-  margin: 0 8px 8px 0;
+  border-bottom: 1px solid #4199D4;
+  margin: 0 0 0px 0;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-  background: #FFFFFF;
+}
+#module-list li:last-child {
+  border: none;
 }
 #module-list li.hint {
-  border: 1px solid #FFFFFF;
+  opacity: 0.75;
 }
 #module-list li.active {
-  border: 1px solid #000000;
+  background: #EEEEEE;
+  opacity: 1;
 }
 
 .ui-row {
