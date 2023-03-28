@@ -5,7 +5,6 @@ let layoutTemplate = "";
 const btn = document.querySelector(".btn");
 const fileText = document.querySelector("#fileText");
 const moduleList = document.querySelector("#module-list");
-let moduleIdNumber = 0;
 
 let moduleInfo = {
     "dynamicHero": "Dynamic Hero",
@@ -28,7 +27,6 @@ let moduleInfo = {
 let state = {
     "header": ["header"],
     "modules": [],
-    "modulesTest": [],
     "footer": ["footer"],
     "legal": [],
     "previewSize": "full",
@@ -36,7 +34,6 @@ let state = {
 }
 
 function init() {
-    console.log("init")
     previewSize(state.previewSize);
     previewScale(state.previewZoom);
     render();
@@ -56,16 +53,27 @@ async function render() {
 
     // update preview
     preview();
+
+    console.log(state.modules)
 }
 
 function updateModuleList() {
     moduleList.innerHTML = "";
-    for (let i = 0; i < state.modulesTest.length; i++) {
+    for (let i = 0; i < state.modules.length; i++) {
         let newItem = document.createElement("li");
-        newItem.setAttribute("data-moduleIdNumber", state.modulesTest[i].moduleIdNumber)
-        newItem.innerHTML = moduleInfo[state.modulesTest[i].moduleName];
+        console.log("OK", state.modules[i].moduleIdNumber)
+        newItem.setAttribute("data-moduleIdNumber", state.modules[i].moduleIdNumber)
+        newItem.innerHTML = `${moduleInfo[state.modules[i].moduleName]} <div onclick="removeModule(this)">X</div>`;
         moduleList.appendChild(newItem);
     }
+}
+
+function removeModule(target) {
+    const clickedItem = target.closest("li");
+    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
+    const foundIndex = state.modules.findIndex(element => element.moduleIdNumber === clickedIdNumber);
+    state.modules.splice(foundIndex, 1);
+    render();
 }
 
 function addHeader(moduleName) {
@@ -73,8 +81,8 @@ function addHeader(moduleName) {
     render();
 }
 function addModule(moduleName) {
-    state.modulesTest.push({ moduleName: moduleName, moduleIdNumber: moduleIdNumber });
-    moduleIdNumber++;
+    let moduleIdNumber = makeid(6);
+    state.modules.push({ moduleName: moduleName, moduleIdNumber: moduleIdNumber });
     render();
 }
 function addFooter(moduleName) {
@@ -88,6 +96,15 @@ function addLegal(toggle) {
         state["legal"] = [];
     }
     render();
+}
+function makeid(length) {
+    let result = "";
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
 
 async function buildTemplate() {
@@ -103,8 +120,8 @@ async function buildTemplate() {
     layoutTemplate = layoutTemplate.replace(regex, (state.header.length > 0 ? importHeaders[state.header] : ""));
 
     let layoutMain = "";
-    for (let i = 0; i < state.modulesTest.length; i++) {
-        layoutMain += importModules[state.modulesTest[i].moduleName];
+    for (let i = 0; i < state.modules.length; i++) {
+        layoutMain += importModules[state.modules[i].moduleName];
     }
     regex = /\[htmlMain\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutMain);
@@ -227,10 +244,10 @@ function handleDragList(list) {
             // reorder state list
             let updatedList = [];
             for (let j = 0; j < moduleList.children.length; j++) {
-                let idNumber = Number(moduleList.children[j].getAttribute("data-moduleIdNumber"));
-                updatedList.push(state.modulesTest.find(element => element.moduleIdNumber === idNumber));
+                let idNumber = moduleList.children[j].getAttribute("data-moduleIdNumber");
+                updatedList.push(state.modules.find(element => element.moduleIdNumber === idNumber));
             }
-            state.modulesTest = updatedList;
+            state.modules = updatedList;
             render();
         };
     }

@@ -80,6 +80,9 @@ form textarea {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 #module-list li:last-child {
   border: none;
