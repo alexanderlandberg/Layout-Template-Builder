@@ -9,6 +9,12 @@ const moduleList = document.querySelector("#module-list");
 let moduleInfo = {
     "dynamicHero": {
         "name": "Dynamic Hero",
+        "settings": [{
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+        }]
     },
     "imageProduct": {
         "name": "Image Product",
@@ -26,6 +32,7 @@ let moduleInfo = {
             "class": "spacer__small",
             "type": "radio",
             "id": "radio-size",
+            "checked": true,
         }, {
             "name": "Spacer Large",
             "class": "spacer__large",
@@ -73,7 +80,7 @@ let moduleInfo = {
 
 let state = {
     "header": ["header"],
-    "modules": [{ "moduleName": "intro", "moduleIdNumber": "lIIoTg" }, { "moduleName": "spacer", "moduleIdNumber": "Avq2hM" }, { "moduleName": "cards", "moduleIdNumber": "m6K5Lm" }],
+    "modules": [{ "moduleName": "intro", "moduleIdNumber": "nuYnyl" }, { "moduleName": "spacer", "moduleIdNumber": "eFJGO7", "open": true }, { "moduleName": "cards", "moduleIdNumber": "kN7gW4", "open": true }],
     "footer": ["footer"],
     "legal": [],
     "previewSize": "full",
@@ -113,14 +120,13 @@ function updateModuleList() {
         if (state.modules[i].open) {
             newItem.classList.add("open");
         }
-
-        let newAccordion = document.createElement("div");
-        newAccordion.classList.add("accordion");
+        // list item
+        let newListItem = document.createElement("div");
+        newListItem.classList.add("list-item");
 
         let newExpand = document.createElement("div");
         newExpand.classList.add("expand");
         newExpand.setAttribute("onclick", "expandModuleSettings(this)");
-
 
         let newModuleName = document.createElement("div");
         newModuleName.classList.add("module-name");
@@ -130,17 +136,54 @@ function updateModuleList() {
         newClose.classList.add("close");
         newClose.setAttribute("onclick", "removeModule(this)");
 
-        newAccordion.appendChild(newModuleName);
+        newListItem.appendChild(newModuleName);
         if (moduleInfo[state.modules[i].moduleName].settings) {
-            newAccordion.appendChild(newExpand);
+            newListItem.appendChild(newExpand);
         }
-        newAccordion.appendChild(newClose);
+        newListItem.appendChild(newClose);
+        newItem.appendChild(newListItem);
 
-        let newSettings = document.createElement("div");
-        newSettings.classList.add("settings");
+        // settings
+        if (moduleInfo[state.modules[i].moduleName].settings) {
+            let newSettings = document.createElement("div");
+            newSettings.classList.add("settings");
 
-        newItem.appendChild(newAccordion);
-        newItem.appendChild(newSettings);
+            let settingsArr = moduleInfo[state.modules[i].moduleName].settings;
+            console.log(settingsArr.length)
+            for (let j = 0; j < settingsArr.length; j++) {
+
+                let newInput = document.createElement("input");
+                let index = "";
+
+                // radio
+                if (settingsArr[j]["type"] === "radio") {
+                    newInput.name = settingsArr[j].id;
+                    index = "-" + (j + 1);
+                }
+
+                // shared
+                newInput.type = settingsArr[j]["type"];
+                newInput.id = settingsArr[j].id + "-" + state.modules[i].moduleIdNumber + index;
+
+                if (settingsArr[j]["checked"]) {
+                    newInput.setAttribute("checked", "checked");
+                }
+
+                // label
+                let newLabel = document.createElement("label");
+                newLabel.setAttribute("for", settingsArr[j].id + "-" + state.modules[i].moduleIdNumber + index);
+                newLabel.innerHTML = settingsArr[j].name;
+                newSettings.appendChild(newInput);
+                newSettings.appendChild(newLabel);
+
+                // add break between inputs
+                if (j < (settingsArr.length - 1)) {
+                    let newBreak = document.createElement("br");
+                    newSettings.appendChild(newBreak);
+                }
+            }
+            newItem.appendChild(newSettings);
+        }
         moduleList.appendChild(newItem);
     }
 }

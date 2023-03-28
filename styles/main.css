@@ -54,7 +54,6 @@ form textarea {
 }
 #module-list li {
   position: relative;
-  padding: 8px;
   font-size: 12px;
   font-weight: 700;
   max-height: 30px;
@@ -85,15 +84,16 @@ form textarea {
 #module-list li.open .expand::after {
   transform: rotate(-180deg);
 }
-#module-list .accordion {
+#module-list .list-item {
   display: flex;
   justify-content: space-between;
+  margin: 8px;
 }
-#module-list .accordion .module-name {
+#module-list .list-item .module-name {
   padding: 0px 8px;
 }
-#module-list .accordion .close::after,
-#module-list .accordion .expand::after {
+#module-list .list-item .close::after,
+#module-list .list-item .expand::after {
   display: block;
   font-family: "Material Symbols Outlined";
   font-size: 12px;
@@ -102,18 +102,22 @@ form textarea {
   width: 12px;
   cursor: pointer;
 }
-#module-list .accordion .expand::after {
+#module-list .list-item .expand::after {
   content: "expand_more";
   transition: transform 0.5s ease;
 }
-#module-list .accordion .close::after {
+#module-list .list-item .close::after {
   content: "close";
 }
-#module-list .accordion .expand {
+#module-list .list-item .expand {
   flex-grow: 1;
 }
 #module-list .settings {
-  height: 100px;
+  margin: 8px;
+}
+#module-list .settings label {
+  color: #999999;
+  text-transform: initial;
 }
 
 .ui-row::after {

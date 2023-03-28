@@ -14,7 +14,6 @@
 
     li {
         position: relative;
-        padding: 8px;
         font-size: 12px;
         font-weight: 700;
         max-height: 30px;
@@ -49,9 +48,10 @@
         }
     }
 
-    .accordion {
+    .list-item {
         display: flex;
         justify-content: space-between;
+        margin: 8px;
 
         .module-name {
             padding: 0px 8px;
@@ -84,7 +84,12 @@
     }
 
     .settings {
-        height: 100px;
+        margin: 8px;
+
+        label {
+            color: $color-darkgrey;
+            text-transform: initial;
+        }
     }
 }
 
