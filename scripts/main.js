@@ -31,12 +31,14 @@ let state = {
     "modulesTest": [],
     "footer": ["footer"],
     "legal": [],
-    "previewSize": "mobile",
-    "previewZoom": "25%",
+    "previewSize": "full",
+    "previewZoom": "25",
 }
 
 function init() {
     console.log("init")
+    previewSize(state.previewSize);
+    previewScale(state.previewZoom);
     render();
 }
 
@@ -140,11 +142,15 @@ function preview() {
 }
 function previewSize(size) {
     const previewContainer = document.querySelector("#iframe");
-    previewContainer.setAttribute("data-size", `${size}`)
+    previewContainer.setAttribute("data-size", `${size}`);
+    const selectedValue = document.querySelector(`#switch-screensize-${size}`);
+    selectedValue.setAttribute("checked", "checked");
 }
 function previewScale(scale) {
     const previewContainer = document.querySelector("#iframe");
-    previewContainer.setAttribute("data-scale", `${scale}`)
+    previewContainer.setAttribute("data-scale", `${scale}`);
+    const selectedValue = document.querySelector(`#switch-zoom-${scale}`);
+    selectedValue.setAttribute("checked", "checked");
 }
 
 function handleDragList(list) {
