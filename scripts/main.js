@@ -17,20 +17,20 @@ async function render() {
     console.log("RENDER")
 
     // update module list
-    await updateModuleList();
-    await slist(document.querySelector("#module-list"));
+    updateModuleList();
+    handleDragList(document.querySelector("#module-list"));
 
     // build template
     await buildTemplate();
 
     // update file for download
-    await updateFile();
+    updateFile();
 
     // update preview
     preview();
 }
 
-async function updateModuleList() {
+function updateModuleList() {
     const sortList = document.querySelector("#module-list");
     sortList.innerHTML = "";
     for (let i = 0; i < state.modules.length; i++) {
@@ -44,15 +44,15 @@ function addHeader(moduleName) {
     state["header"] = [moduleName];
     render();
 }
-async function addModule(moduleName) {
+function addModule(moduleName) {
     state["modules"].push(moduleName);
     render();
 }
-async function addFooter(moduleName) {
+function addFooter(moduleName) {
     state["footer"] = [moduleName];
     render();
 }
-async function addLegal(moduleName) {
+function addLegal(moduleName) {
     state["legal"] = [moduleName];
     render();
 }
@@ -80,12 +80,12 @@ async function buildTemplate() {
     layoutTemplate = layoutTemplate.replace(regex, `${(state.footer.length > 0 ? importFooters[state.footer] : "")}${(state.legal.length > 0 ? importFooters[state.legal] : "")}`);
 }
 
-async function updateFile() {
+function updateFile() {
     console.log("update file")
     fileText.value = layoutTemplate;
 }
 
-async function download(filename, text) {
+function download(filename, text) {
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
@@ -118,9 +118,9 @@ function previewScale(scale) {
     previewContainer.setAttribute("data-scale", `${scale}`)
 }
 
-async function slist(target) {
+function handleDragList(target) {
     // (A) SET CSS + GET ALL LIST ITEMS
-    target.classList.add("slist");
+    target.classList.add("dragList");
     let items = target.getElementsByTagName("li"), current = null;
 
     // (B) MAKE ITEMS DRAGGABLE + SORTABLE

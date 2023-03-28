@@ -20,5 +20,7 @@ body {
 
     #preview {
         width: calc(100% - 440px);
+        display: flex;
+        flex-direction: column;
     }
 }
