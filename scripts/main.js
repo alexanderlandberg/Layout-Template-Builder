@@ -7,27 +7,73 @@ const fileText = document.querySelector("#fileText");
 const moduleList = document.querySelector("#module-list");
 
 let moduleInfo = {
-    "dynamicHero": "Dynamic Hero",
-    "imageProduct": "Image Product",
-    "imageForm": "Image Form",
-    "textForm": "Text Form",
-    "spacer": "Spacer",
-    "intro": "Intro",
-    "statementA": "Statement A",
-    "statementB": "Statement B",
-    "cards": "Cards",
-    "infographics": "Infographics",
-    "article": "Article",
-    "articleTwoColumn": "Article Two Column",
-    "sideBySide": "Side By Side",
-    "keyNumbers": "Key Numbers",
-    "contactForm": "Contact Form",
+    "dynamicHero": {
+        "name": "Dynamic Hero",
+    },
+    "imageProduct": {
+        "name": "Image Product",
+    },
+    "imageForm": {
+        "name": "Image Form",
+    },
+    "textForm": {
+        "name": "Text Form",
+    },
+    "spacer": {
+        "name": "Spacer",
+        "settings": [{
+            "name": "Spacer Small",
+            "class": "spacer__small",
+            "type": "radio",
+            "id": "radio-size",
+        }, {
+            "name": "Spacer Large",
+            "class": "spacer__large",
+            "type": "radio",
+            "id": "radio-size",
+        }]
+    },
+    "intro": {
+        "name": "Intro",
+    },
+    "statementA": {
+        "name": "Statement A",
+    },
+    "statementB": {
+        "name": "Statement B",
+    },
+    "cards": {
+        "name": "Cards",
+        "settings": [{
+            "name": "Background Grey",
+            "class": "t-bg-color-grey",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+        }]
+    },
+    "infographics": {
+        "name": "Infographics",
+    },
+    "article": {
+        "name": "Article",
+    },
+    "articleTwoColumn": {
+        "name": "Article Two Column",
+    },
+    "sideBySide": {
+        "name": "Side By Side",
+    },
+    "keyNumbers": {
+        "name": "Key Numbers",
+    },
+    "contactForm": {
+        "name": "Contact Form",
+    },
 }
 
 let state = {
     "header": ["header"],
-    // "modules": [],
-    "modules": [{ "moduleName": "spacer", "moduleIdNumber": "FrXMgU" }, { "moduleName": "intro", "moduleIdNumber": "w5modL" }, { "moduleName": "spacer", "moduleIdNumber": "soGv8z" }],
+    "modules": [{ "moduleName": "intro", "moduleIdNumber": "lIIoTg" }, { "moduleName": "spacer", "moduleIdNumber": "Avq2hM" }, { "moduleName": "cards", "moduleIdNumber": "m6K5Lm" }],
     "footer": ["footer"],
     "legal": [],
     "previewSize": "full",
@@ -55,21 +101,46 @@ async function render() {
     // update preview
     // preview();
 
-    // console.log(JSON.stringify(state.modules))
+    // console.log(state.modules[state.modules.length - 1])
+    console.log(JSON.stringify(state.modules))
 }
 
 function updateModuleList() {
     moduleList.innerHTML = "";
     for (let i = 0; i < state.modules.length; i++) {
         let newItem = document.createElement("li");
-        newItem.setAttribute("data-moduleIdNumber", state.modules[i].moduleIdNumber)
-        newItem.innerHTML = `
-        <div class="accordion">
-            <div class="expand" onclick="expandModuleSettings(this)">expand_more</div>
-            <div class="module-name">${moduleInfo[state.modules[i].moduleName]}</div>
-            <div class="close" onclick="removeModule(this)">close</div>
-        </div>
-        <div class="settings"></div>`;
+        newItem.setAttribute("data-moduleIdNumber", state.modules[i].moduleIdNumber);
+        if (state.modules[i].open) {
+            newItem.classList.add("open");
+        }
+
+        let newAccordion = document.createElement("div");
+        newAccordion.classList.add("accordion");
+
+        let newExpand = document.createElement("div");
+        newExpand.classList.add("expand");
+        newExpand.setAttribute("onclick", "expandModuleSettings(this)");
+
+
+        let newModuleName = document.createElement("div");
+        newModuleName.classList.add("module-name");
+        newModuleName.innerHTML = moduleInfo[state.modules[i].moduleName].name;
+
+        let newClose = document.createElement("div");
+        newClose.classList.add("close");
+        newClose.setAttribute("onclick", "removeModule(this)");
+
+        newAccordion.appendChild(newModuleName);
+        if (moduleInfo[state.modules[i].moduleName].settings) {
+            newAccordion.appendChild(newExpand);
+        }
+        newAccordion.appendChild(newClose);
+
+        let newSettings = document.createElement("div");
+        newSettings.classList.add("settings");
+
+        newItem.appendChild(newAccordion);
+        newItem.appendChild(newSettings);
         moduleList.appendChild(newItem);
     }
 }
@@ -100,8 +171,12 @@ function addHeader(moduleName) {
     render();
 }
 function addModule(moduleName) {
-    let moduleIdNumber = makeid(6);
-    state.modules.push({ moduleName: moduleName, moduleIdNumber: moduleIdNumber });
+    console.log("test", moduleInfo[moduleName])
+    let newObj = {
+        "moduleName": moduleName,
+        "moduleIdNumber": makeId(6),
+    }
+    state.modules.push(newObj);
     render();
 }
 function addFooter(moduleName) {
@@ -116,7 +191,7 @@ function addLegal(toggle) {
     }
     render();
 }
-function makeid(length) {
+function makeId(length) {
     let result = "";
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;

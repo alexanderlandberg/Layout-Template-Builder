@@ -23,7 +23,7 @@
         color: #4199D4;
         border-bottom: 1px solid #4199D4;
         margin: 0 0 0px 0;
-        cursor: pointer;
+        cursor: move;
         user-select: none;
         transition: max-height .5s $easing;
 
@@ -43,7 +43,7 @@
         &.open {
             max-height: 100px;
 
-            .expand {
+            .expand::after {
                 transform: rotate(-180deg);
             }
         }
@@ -51,22 +51,35 @@
 
     .accordion {
         display: flex;
+        justify-content: space-between;
 
         .module-name {
-            flex-grow: 1;
             padding: 0px 8px;
         }
 
-        .expand,
-        .close {
+        .close::after,
+        .expand::after {
+            display: block;
             font-family: 'Material Symbols Outlined';
             font-size: 12px;
             line-height: 1;
             font-weight: 700;
+            width: 12px;
+            cursor: pointer;
+
+        }
+
+        .expand::after {
+            content: "expand_more";
+            transition: transform .5s $easing;
+        }
+
+        .close::after {
+            content: "close";
         }
 
         .expand {
-            transition: transform .5s $easing;
+            flex-grow: 1;
         }
     }
 

@@ -63,7 +63,7 @@ form textarea {
   color: #4199D4;
   border-bottom: 1px solid #4199D4;
   margin: 0 0 0px 0;
-  cursor: pointer;
+  cursor: move;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
@@ -82,25 +82,35 @@ form textarea {
 #module-list li.open {
   max-height: 100px;
 }
-#module-list li.open .expand {
+#module-list li.open .expand::after {
   transform: rotate(-180deg);
 }
 #module-list .accordion {
   display: flex;
+  justify-content: space-between;
 }
 #module-list .accordion .module-name {
-  flex-grow: 1;
   padding: 0px 8px;
 }
-#module-list .accordion .expand,
-#module-list .accordion .close {
+#module-list .accordion .close::after,
+#module-list .accordion .expand::after {
+  display: block;
   font-family: "Material Symbols Outlined";
   font-size: 12px;
   line-height: 1;
   font-weight: 700;
+  width: 12px;
+  cursor: pointer;
+}
+#module-list .accordion .expand::after {
+  content: "expand_more";
+  transition: transform 0.5s ease;
+}
+#module-list .accordion .close::after {
+  content: "close";
 }
 #module-list .accordion .expand {
-  transition: transform 0.5s ease;
+  flex-grow: 1;
 }
 #module-list .settings {
   height: 100px;
