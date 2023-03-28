@@ -1,20 +1,46 @@
 "use strict";
+window.addEventListener("load", init);
 
 let layoutTemplate = "";
 const btn = document.querySelector(".btn");
 const fileText = document.querySelector("#fileText");
+const moduleList = document.querySelector("#module-list");
+let moduleIdNumber = 0;
+
+let moduleInfo = {
+    "dynamicHero": "Dynamic Hero",
+    "imageProduct": "Image Product",
+    "imageForm": "Image Form",
+    "textForm": "Text Form",
+    "spacer": "Spacer",
+    "intro": "Intro",
+    "statementA": "Statement A",
+    "statementB": "Statement B",
+    "cards": "Cards",
+    "infographics": "Infographics",
+    "article": "Article",
+    "articleTwoColumn": "Article Two Column",
+    "sideBySide": "Side By Side",
+    "keyNumbers": "Key Numbers",
+    "contactForm": "Contact Form",
+}
 
 let state = {
-    "header": [],
+    "header": ["header"],
     "modules": [],
-    "footer": [],
+    "modulesTest": [],
+    "footer": ["footer"],
     "legal": [],
-    "previewSize": "full",
-    "previewZoom": "100%",
+    "previewSize": "mobile",
+    "previewZoom": "25%",
+}
+
+function init() {
+    console.log("init")
+    render();
 }
 
 async function render() {
-    console.log("RENDER")
 
     // update module list
     updateModuleList();
@@ -31,12 +57,12 @@ async function render() {
 }
 
 function updateModuleList() {
-    const sortList = document.querySelector("#module-list");
-    sortList.innerHTML = "";
-    for (let i = 0; i < state.modules.length; i++) {
+    moduleList.innerHTML = "";
+    for (let i = 0; i < state.modulesTest.length; i++) {
         let newItem = document.createElement("li");
-        newItem.innerHTML = state.modules[i];
-        sortList.appendChild(newItem);
+        newItem.setAttribute("data-moduleIdNumber", state.modulesTest[i].moduleIdNumber)
+        newItem.innerHTML = moduleInfo[state.modulesTest[i].moduleName];
+        moduleList.appendChild(newItem);
     }
 }
 
@@ -45,15 +71,20 @@ function addHeader(moduleName) {
     render();
 }
 function addModule(moduleName) {
-    state["modules"].push(moduleName);
+    state.modulesTest.push({ moduleName: moduleName, moduleIdNumber: moduleIdNumber });
+    moduleIdNumber++;
     render();
 }
 function addFooter(moduleName) {
     state["footer"] = [moduleName];
     render();
 }
-function addLegal(moduleName) {
-    state["legal"] = [moduleName];
+function addLegal(toggle) {
+    if (toggle.checked) {
+        state["legal"] = ["legal"];
+    } else {
+        state["legal"] = [];
+    }
     render();
 }
 
@@ -70,8 +101,8 @@ async function buildTemplate() {
     layoutTemplate = layoutTemplate.replace(regex, (state.header.length > 0 ? importHeaders[state.header] : ""));
 
     let layoutMain = "";
-    for (let i = 0; i < state.modules.length; i++) {
-        layoutMain += importModules[state.modules[i]];
+    for (let i = 0; i < state.modulesTest.length; i++) {
+        layoutMain += importModules[state.modulesTest[i].moduleName];
     }
     regex = /\[htmlMain\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutMain);
@@ -81,7 +112,6 @@ async function buildTemplate() {
 }
 
 function updateFile() {
-    console.log("update file")
     fileText.value = layoutTemplate;
 }
 
@@ -99,7 +129,6 @@ function download(filename, text) {
 }
 
 function preview() {
-    console.log("preview")
     const previewContainer = document.querySelector("#iframe");
     previewContainer.innerHTML = "";
     const iframe = document.createElement('iframe');
@@ -118,66 +147,84 @@ function previewScale(scale) {
     previewContainer.setAttribute("data-scale", `${scale}`)
 }
 
-function handleDragList(target) {
-    // (A) SET CSS + GET ALL LIST ITEMS
-    target.classList.add("dragList");
-    let items = target.getElementsByTagName("li"), current = null;
+function handleDragList(list) {
 
-    // (B) MAKE ITEMS DRAGGABLE + SORTABLE
-    for (let i of items) {
-        // (B1) ATTACH DRAGGABLE
-        i.draggable = true;
+    // get list items and set class
+    let items = list.getElementsByTagName("li");
+    let current;
+    if (items.length > 0) {
+        list.classList.add("dragList");
+    } else {
+        list.classList.remove("dragList");
+    }
 
-        // (B2) DRAG START - YELLOW HIGHLIGHT DROPZONES
-        i.ondragstart = e => {
-            current = i;
-            for (let it of items) {
-                if (it != current) { it.classList.add("hint"); }
+    // loop items and enable draggable
+    for (let i = 0; i < items.length; i++) {
+        // add draggable
+        items[i].draggable = true;
+
+        // drag start - add hint class
+        items[i].ondragstart = e => {
+            current = items[i];
+            // for (let it of items) {
+            for (let j = 0; j < items.length; j++) {
+                if (items[j] != current) {
+                    items[j].classList.add("hint");
+                }
             }
         };
 
-        // (B3) DRAG ENTER - RED HIGHLIGHT DROPZONE
-        i.ondragenter = e => {
-            if (i != current) { i.classList.add("active"); }
-        };
-
-        // (B4) DRAG LEAVE - REMOVE RED HIGHLIGHT
-        i.ondragleave = () => i.classList.remove("active");
-
-        // (B5) DRAG END - REMOVE ALL HIGHLIGHTS
-        i.ondragend = () => {
-            for (let it of items) {
-                it.classList.remove("hint");
-                it.classList.remove("active");
+        // drag enter - add active class 
+        items[i].ondragenter = e => {
+            if (items[i] != current) {
+                items[i].classList.add("active");
             }
         };
 
-        // (B6) DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
-        i.ondragover = e => e.preventDefault();
+        // drag leave - remove active class
+        items[i].ondragleave = () => items[i].classList.remove("active");
 
-        // (B7) ON DROP - DO SOMETHING
-        i.ondrop = e => {
+        // drag end - remove hint and active
+        items[i].ondragend = () => {
+            for (let j = 0; j < items.length; j++) {
+                items[j].classList.remove("hint");
+                items[j].classList.remove("active");
+            }
+        };
+
+        // drag over - prevent default drop
+        items[i].ondragover = e => e.preventDefault();
+
+        // on drop - do stuff
+        items[i].ondrop = e => {
             e.preventDefault();
             if (i != current) {
-                let currentpos = 0, droppedpos = 0;
-                for (let it = 0; it < items.length; it++) {
-                    if (current == items[it]) { currentpos = it; }
-                    if (i == items[it]) { droppedpos = it; }
+                let currentpos = 0;
+                let droppedpos = 0;
+
+                for (let j = 0; j < items.length; j++) {
+                    if (current == items[j]) {
+                        currentpos = j;
+                    }
+                    if (items[i] == items[j]) {
+                        droppedpos = j;
+                    }
                 }
+
                 if (currentpos < droppedpos) {
-                    i.parentNode.insertBefore(current, i.nextSibling);
+                    items[i].parentNode.insertBefore(current, items[i].nextSibling);
                 } else {
-                    i.parentNode.insertBefore(current, i);
+                    items[i].parentNode.insertBefore(current, items[i]);
                 }
             }
-            // reorder module list
-            console.log("REORDER");
-            const sortList = document.querySelector("#module-list");
-            let sortListNewOrder = [];
-            for (let i = 0; i < sortList.children.length; i++) {
-                sortListNewOrder.push(sortList.children[i].innerHTML);
+
+            // reorder state list
+            let updatedList = [];
+            for (let j = 0; j < moduleList.children.length; j++) {
+                let idNumber = Number(moduleList.children[j].getAttribute("data-moduleIdNumber"));
+                updatedList.push(state.modulesTest.find(element => element.moduleIdNumber === idNumber));
             }
-            state.modules = sortListNewOrder;
+            state.modulesTest = updatedList;
             render();
         };
     }
