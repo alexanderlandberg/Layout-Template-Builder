@@ -87,87 +87,13 @@
                     </div>
                 </div>
             </div>
-
-            <div id="ui-test" style="display: none;">
-                <section>
-
-                </section>
-                <section>
-                    <h4>Form</h4>
-                    <form onsubmit="download(this['name'].value, this['text'].value)" target="_new">
-                        <input type="text" name="name" value="template-test.html">
-                        <textarea id="fileText" name="text"></textarea>
-                        <input type="submit" value="Download">
-                    </form>
-                </section>
-                <section>
-                    <h4>Headers</h4>
-                    <div>
-                        <div class="btn" onclick="addHeader('header')">
-                            Add Header
-                        </div>
-                        <div class="btn" onclick="addHeader('hero')">
-                            Add Hero
-                        </div>
-                    </div>
-                    <h4>Modules</h4>
-                    <div>
-                        <div class="btn" onclick="addModule('dynamicHero')">
-                            Add Dynamic Hero
-                        </div>
-                        <div class="btn" onclick="addModule('imageProduct')">
-                            Add Image Product
-                        </div>
-                        <div class="btn" onclick="addModule('imageForm')">
-                            Add Image Form
-                        </div>
-                        <div class="btn" onclick="addModule('textForm')">
-                            Add Text Form
-                        </div>
-                        <div class="btn" onclick="addModule('spacer')">
-                            Add Spacer
-                        </div>
-                        <div class="btn" onclick="addModule('intro')">
-                            Add Intro
-                        </div>
-                        <div class="btn" onclick="addModule('statementA')">
-                            Add Statement A
-                        </div>
-                        <div class="btn" onclick="addModule('statementB')">
-                            Add Statement B
-                        </div>
-                        <div class="btn" onclick="addModule('cards')">
-                            Add Cards
-                        </div>
-                        <div class="btn" onclick="addModule('infographics')">
-                            Add Infographics
-                        </div>
-                        <div class="btn" onclick="addModule('article')">
-                            Add Article
-                        </div>
-                        <div class="btn" onclick="addModule('articleTwoColumn')">
-                            Add Article Two Column
-                        </div>
-                        <div class="btn" onclick="addModule('sideBySide')">
-                            Add Side By Side
-                        </div>
-                        <div class="btn" onclick="addModule('keyNumbers')">
-                            Add Key Numbers
-                        </div>
-                        <div class="btn" onclick="addModule('contactForm')">
-                            Add Contact Form
-                        </div>
-                    </div>
-                    <h4>Footers</h4>
-                    <div>
-                        <div class="btn" onclick="addFooter('footer')">
-                            Add Footer
-                        </div>
-                        <div class="btn" onclick="addLegal('legal')">
-                            Add Legal
-                        </div>
-                    </div>
-                </section>
+            <div class="ui-row">
+                <div class="label">Download</div>
+                <form onsubmit="download(this['name'].value, this['text'].value)" target="_new">
+                    <input type="text" name="name" value="template-test.html">
+                    <textarea id="fileText" name="text"></textarea>
+                    <input class="button" type="submit" value="Download">
+                </form>
             </div>
         </div>
         <div id="preview">

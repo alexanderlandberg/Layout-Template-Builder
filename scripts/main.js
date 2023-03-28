@@ -26,7 +26,8 @@ let moduleInfo = {
 
 let state = {
     "header": ["header"],
-    "modules": [],
+    // "modules": [],
+    "modules": [{ "moduleName": "spacer", "moduleIdNumber": "FrXMgU" }, { "moduleName": "intro", "moduleIdNumber": "w5modL" }, { "moduleName": "spacer", "moduleIdNumber": "soGv8z" }],
     "footer": ["footer"],
     "legal": [],
     "previewSize": "full",
@@ -52,19 +53,37 @@ async function render() {
     updateFile();
 
     // update preview
-    preview();
+    // preview();
 
-    console.log(state.modules)
+    // console.log(JSON.stringify(state.modules))
 }
 
 function updateModuleList() {
     moduleList.innerHTML = "";
     for (let i = 0; i < state.modules.length; i++) {
         let newItem = document.createElement("li");
-        console.log("OK", state.modules[i].moduleIdNumber)
         newItem.setAttribute("data-moduleIdNumber", state.modules[i].moduleIdNumber)
-        newItem.innerHTML = `${moduleInfo[state.modules[i].moduleName]} <div onclick="removeModule(this)">X</div>`;
+        newItem.innerHTML = `
+        <div class="accordion">
+            <div class="expand" onclick="expandModuleSettings(this)">expand_more</div>
+            <div class="module-name">${moduleInfo[state.modules[i].moduleName]}</div>
+            <div class="close" onclick="removeModule(this)">close</div>
+        </div>
+        <div class="settings"></div>`;
         moduleList.appendChild(newItem);
+    }
+}
+
+function expandModuleSettings(target) {
+    const clickedItem = target.closest("li");
+    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
+    const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
+    if (!clickedItem.classList.contains("open")) {
+        target.closest("li").classList.add("open");
+        foundItem.open = true;
+    } else {
+        target.closest("li").classList.remove("open");
+        foundItem.open = false;
     }
 }
 
