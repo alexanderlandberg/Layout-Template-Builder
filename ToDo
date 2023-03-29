@@ -1,0 +1,11 @@
+Prio High:
+- Add "state" to local storage
+- Fetch "state" from local storage (if it exists)
+
+Prio Medium:
+- Style text input and textarea for download
+- Enable settings for headers, footers and legal
+
+Prio Low:
+- Disable zoom when screensize is set to Mobile/Tablet
+- Add reset button with confirmation promt
