@@ -271,6 +271,23 @@ function expandModuleSettings(target) {
     }
 }
 
+function expandAllSettings() {
+    for (let i = 0; i < state.modules.length; i++) {
+        if (moduleInfo[state.modules[i].moduleName].settings) {
+            state.modules[i].open = true;
+            moduleList.children[i].classList.add("open");
+        }
+    }
+}
+function collapseAllSettings() {
+    for (let i = 0; i < state.modules.length; i++) {
+        if (moduleInfo[state.modules[i].moduleName].settings) {
+            state.modules[i].open = false;
+            moduleList.children[i].classList.remove("open");
+        }
+    }
+}
+
 function removeModule(target) {
     const clickedItem = target.closest("li");
     const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
