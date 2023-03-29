@@ -33,13 +33,13 @@ let moduleInfo = {
             "type": "radio",
             "id": "radio-size",
             "index": "1",
-            "checked": "checked",
         }, {
             "name": "Spacer Large",
             "class": "spacer__large",
             "type": "radio",
             "id": "radio-size",
             "index": "2",
+            "checked": "checked",
         }]
     },
     "intro": {
@@ -58,6 +58,7 @@ let moduleInfo = {
             "class": "t-bg-color-grey",
             "type": "checkbox",
             "id": "checkbox-bg",
+            "checked": "checked",
         }]
     },
     "infographics": {
@@ -82,7 +83,7 @@ let moduleInfo = {
 
 let state = {
     "header": ["header"],
-    "modules": [{ "moduleName": "intro", "moduleIdNumber": "0Lbvj9" }, { "moduleName": "spacer", "moduleIdNumber": "Lqvjdr", "settings": { "radio-size": "radio-size_1_Lqvjdr" }, "open": true }, { "moduleName": "cards", "moduleIdNumber": "f9JkA5", "settings": {}, "open": true }],
+    "modules": [],
     "footer": ["footer"],
     "legal": [],
     "previewSize": "full",
@@ -108,10 +109,10 @@ async function render() {
     updateFile();
 
     // update preview
-    // preview();
+    preview();
 
     // console.log(state.modules[state.modules.length - 1])
-    console.log(JSON.stringify(state.modules))
+    // console.log(JSON.stringify(state.modules))
 }
 
 function updateModuleList() {
@@ -195,12 +196,9 @@ function updateModuleList() {
 }
 
 function handleModuleSettings(target) {
-    // console.log(target);
-
     const clickedItem = target.closest("li");
     const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
     const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
-
 
     // radio
     if (target.type === "radio") {
@@ -211,16 +209,10 @@ function handleModuleSettings(target) {
 
     // checkbox
     if (target.type === "checkbox") {
-        console.log("TEST");
         let foundItemSettings = moduleInfo[foundItem.moduleName].settings;
-        console.log(foundItemSettings);
         let foundItemSettingsProp = foundItemSettings.find(element => element.id === target.id.split("_")[0]).id;
-        console.log(foundItemSettingsProp);
         foundItem.settings[foundItemSettingsProp] = target.id;
     }
-
-    // console.log(foundItem);
-    // console.log(target.id, foundItem.moduleIdNumber, foundItem.settings)
 }
 
 function expandModuleSettings(target) {
@@ -249,13 +241,25 @@ function addHeader(moduleName) {
     render();
 }
 function addModule(moduleName) {
-    console.log("test", moduleInfo[moduleName])
+    let idNumber = makeId(6);
     let newObj = {
         "moduleName": moduleName,
-        "moduleIdNumber": makeId(6),
+        "moduleIdNumber": idNumber,
     }
     if (moduleInfo[moduleName].settings) {
         newObj.settings = {};
+        for (let i = 0; i < moduleInfo[moduleName].settings.length; i++) {
+            if (moduleInfo[moduleName].settings[i]) {
+                // radio
+                if (moduleInfo[moduleName].settings[i].type === "radio") {
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + (i + 1) + "_" + idNumber;
+                }
+                // checkbox
+                if (moduleInfo[moduleName].settings[i].type === "checkbox") {
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + idNumber;
+                }
+            }
+        }
     }
     state.modules.push(newObj);
     render();
@@ -364,7 +368,7 @@ function handleDragList(list) {
         // drag start - add hint class
         items[i].ondragstart = e => {
             current = items[i];
-            // for (let it of items) {
+            // e.dataTransfer.setDragImage(new Image(), 0, 0); // remove drag image
             for (let j = 0; j < items.length; j++) {
                 if (items[j] != current) {
                     items[j].classList.add("hint");
