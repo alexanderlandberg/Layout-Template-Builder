@@ -152,35 +152,36 @@ function updateModuleList() {
             console.log(settingsArr.length)
             for (let j = 0; j < settingsArr.length; j++) {
 
+                // label
+                let newLabel = document.createElement("label");
+                newLabel.innerHTML = settingsArr[j].name;
+
                 let newInput = document.createElement("input");
-                let index = "";
+
+                let newSpan = document.createElement("span");
+                newSpan.classList.add("checkmark");
 
                 // radio
                 if (settingsArr[j]["type"] === "radio") {
                     newInput.name = settingsArr[j].id;
-                    index = "-" + (j + 1);
+                    newLabel.classList.add("radio");
+                }
+
+                // checkbox
+                if (settingsArr[j]["type"] === "checkbox") {
+                    newLabel.classList.add("checkbox");
                 }
 
                 // shared
                 newInput.type = settingsArr[j]["type"];
-                newInput.id = settingsArr[j].id + "-" + state.modules[i].moduleIdNumber + index;
 
                 if (settingsArr[j]["checked"]) {
                     newInput.setAttribute("checked", "checked");
                 }
 
-                // label
-                let newLabel = document.createElement("label");
-                newLabel.setAttribute("for", settingsArr[j].id + "-" + state.modules[i].moduleIdNumber + index);
-                newLabel.innerHTML = settingsArr[j].name;
-                newSettings.appendChild(newInput);
+                newLabel.appendChild(newInput);
+                newLabel.appendChild(newSpan);
                 newSettings.appendChild(newLabel);
-
-                // add break between inputs
-                if (j < (settingsArr.length - 1)) {
-                    let newBreak = document.createElement("br");
-                    newSettings.appendChild(newBreak);
-                }
             }
             newItem.appendChild(newSettings);
         }
