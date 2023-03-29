@@ -1,4 +1,4 @@
-export const dynamicHero = `<div class="module dynamic-hero two-columns t-bg-color-blue">
+export const dynamicHero = `<div class="module dynamic-hero two-columns [classList]">
     <div class="module__cell">
         <div class="module__cell-item dynamic-hero__left">
             <div class="dynamic-hero__headline richtext" pardot-region="editable__DynamicHero-headline">
@@ -24,7 +24,7 @@ export const dynamicHero = `<div class="module dynamic-hero two-columns t-bg-col
 </div>
 `;
 
-export const imageProduct = `<div class="module image-product two-columns t-bg-color-blue">
+export const imageProduct = `<div class="module image-product two-columns [classList]">
     <div class="module__cell">
         <div class="module__cell-item image-product__left">
             <img src="https://via.placeholder.com/756x565" alt="" pardot-region="editable__ImageProduct-image" pardot-region-type="image">
@@ -48,7 +48,7 @@ export const imageProduct = `<div class="module image-product two-columns t-bg-c
 </div>
 `;
 
-export const imageForm = `<div class="module image-form two-columns t-bg-color-blue">
+export const imageForm = `<div class="module image-form two-columns [classList]">
     <div class="module__cell">
         <div class="module__cell-item image-form__left">
             <img src="https://via.placeholder.com/756x565" alt="" pardot-region="editable__ImageForm-image" pardot-region-type="image">
@@ -66,7 +66,7 @@ export const imageForm = `<div class="module image-form two-columns t-bg-color-b
 </div>
 `;
 
-export const textForm = `<div class="module text-form two-columns">
+export const textForm = `<div class="module text-form two-columns [classList]">
     <div class="module__cell">
         <div class="module__cell-item text-form__left">
             <div class="text-form__text richtext" pardot-region="editable__TextForm-text">
@@ -89,9 +89,9 @@ export const textForm = `<div class="module text-form two-columns">
     </div>
 </div>`;
 
-export const spacer = `<div class="module spacer spacer__small t-bg-color-grey"></div>`;
+export const spacer = `<div class="module spacer [classList]"></div>`;
 
-export const intro = `<div class="module intro">
+export const intro = `<div class="module intro [classList]">
     <div class="module__cell">
         <div class="module__cell-item intro__content">
             <div class="intro__text richtext" pardot-region="editable__Intro-text">
@@ -102,7 +102,7 @@ export const intro = `<div class="module intro">
     </div>
 </div>`;
 
-export const statementA = `<div class="module statement-a">
+export const statementA = `<div class="module statement-a [classList]">
     <div class="module__cell">
         <div class="module__cell-item">
             <div class="statement-a__image">
@@ -126,7 +126,7 @@ export const statementA = `<div class="module statement-a">
     </div>
 </div>`;
 
-export const statementB = `<div class="module statement-b">
+export const statementB = `<div class="module statement-b [classList]">
     <div class="module__cell">
         <div class="module__cell-item">
             <div class="statement-b__image">
@@ -149,7 +149,7 @@ export const statementB = `<div class="module statement-b">
     </div>
 </div>`;
 
-export const cards = `<div class="module cards">
+export const cards = `<div class="module cards [classList]">
     <div class="module__cell">
         <div class="module__cell-item cards__headline">
             <h2><b>Lorem ipsum</b></h2>
@@ -249,7 +249,7 @@ export const cards = `<div class="module cards">
     </div>
 </div>`;
 
-export const infographics = `<div class="module infographics">
+export const infographics = `<div class="module infographics [classList]">
     <div class="module__cell">
         <div class="module__cell-item infographics__column1">
             <div class="infographics__icon">
@@ -278,7 +278,7 @@ export const infographics = `<div class="module infographics">
     </div>
 </div>`;
 
-export const article = `<div class="module article">
+export const article = `<div class="module article [classList]">
     <div class="module__cell">
         <div class="module__cell-item article__content">
             <div class="article__text richtext" pardot-region="editable__Article-text">
@@ -316,7 +316,7 @@ export const article = `<div class="module article">
     </div>
 </div>`;
 
-export const articleTwoColumn = `<div class="module article-two-column">
+export const articleTwoColumn = `<div class="module article-two-column [classList]">
     <div class="module__cell">
         <div class="module__cell-item article-two-column__content-1">
             <div class="article-two-column__text richtext" pardot-region="editable__Article-two-column-text1">
@@ -331,7 +331,7 @@ export const articleTwoColumn = `<div class="module article-two-column">
     </div>
 </div>`;
 
-export const sideBySide = `<div class="module side-by-side two-columns">
+export const sideBySide = `<div class="module side-by-side two-columns [classList]">
     <div class="module__cell">
         <div class="module__cell-item side-by-side__left">
             <img src="https://via.placeholder.com/747x420" alt="" pardot-region="editable__SideBySide1-image" pardot-region-type="image">
@@ -347,7 +347,7 @@ export const sideBySide = `<div class="module side-by-side two-columns">
     </div>
 </div>`;
 
-export const keyNumbers = `<div class="module key-numbers">
+export const keyNumbers = `<div class="module key-numbers [classList]">
     <div class="module__cell">
         <div class="module__cell-item  key-numbers__column1">
             <div class="key-numbers__headline">
@@ -376,7 +376,7 @@ export const keyNumbers = `<div class="module key-numbers">
     </div>
 </div>`;
 
-export const contactForm = `<div class="module contact-form">
+export const contactForm = `<div class="module contact-form [classList]">
     <div class="module__cell">
         <div class="module__cell-item contact-form__content">
             <div class="contact-form__intro richtext" pardot-region="editable__ContactForm-intro">

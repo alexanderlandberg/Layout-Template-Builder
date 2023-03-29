@@ -14,16 +14,38 @@ let moduleInfo = {
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
+            "checked": "checked",
         }]
     },
     "imageProduct": {
         "name": "Image Product",
+        "settings": [{
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+            "checked": "checked",
+        }]
     },
     "imageForm": {
         "name": "Image Form",
+        "settings": [{
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+            "checked": "checked",
+        }]
     },
     "textForm": {
         "name": "Text Form",
+        "settings": [{
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+            "checked": "checked",
+        }]
     },
     "spacer": {
         "name": "Spacer",
@@ -33,13 +55,18 @@ let moduleInfo = {
             "type": "radio",
             "id": "radio-size",
             "index": "1",
+            "checked": "checked",
         }, {
             "name": "Spacer Large",
             "class": "spacer__large",
             "type": "radio",
             "id": "radio-size",
             "index": "2",
-            "checked": "checked",
+        }, {
+            "name": "Background Grey",
+            "class": "t-bg-color-grey",
+            "type": "checkbox",
+            "id": "checkbox-bg",
         }]
     },
     "intro": {
@@ -58,7 +85,6 @@ let moduleInfo = {
             "class": "t-bg-color-grey",
             "type": "checkbox",
             "id": "checkbox-bg",
-            "checked": "checked",
         }]
     },
     "infographics": {
@@ -72,12 +98,24 @@ let moduleInfo = {
     },
     "sideBySide": {
         "name": "Side By Side",
+        "settings": [{
+            "name": "Invert",
+            "class": "inverted",
+            "type": "checkbox",
+            "id": "checkbox-invert"
+        }]
     },
     "keyNumbers": {
         "name": "Key Numbers",
     },
     "contactForm": {
         "name": "Contact Form",
+        "settings": [{
+            "name": "Background Grey",
+            "class": "t-bg-color-grey",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+        }]
     },
 }
 
@@ -112,7 +150,7 @@ async function render() {
     preview();
 
     // console.log(state.modules[state.modules.length - 1])
-    // console.log(JSON.stringify(state.modules))
+    console.log(JSON.stringify(state.modules))
 }
 
 function updateModuleList() {
@@ -211,8 +249,13 @@ function handleModuleSettings(target) {
     if (target.type === "checkbox") {
         let foundItemSettings = moduleInfo[foundItem.moduleName].settings;
         let foundItemSettingsProp = foundItemSettings.find(element => element.id === target.id.split("_")[0]).id;
-        foundItem.settings[foundItemSettingsProp] = target.id;
+        if (target.checked) {
+            foundItem.settings[foundItemSettingsProp] = target.id;
+        } else {
+            delete foundItem.settings[foundItemSettingsProp];
+        }
     }
+    render();
 }
 
 function expandModuleSettings(target) {
@@ -249,7 +292,7 @@ function addModule(moduleName) {
     if (moduleInfo[moduleName].settings) {
         newObj.settings = {};
         for (let i = 0; i < moduleInfo[moduleName].settings.length; i++) {
-            if (moduleInfo[moduleName].settings[i]) {
+            if (moduleInfo[moduleName].settings[i] && moduleInfo[moduleName].settings[i].checked) {
                 // radio
                 if (moduleInfo[moduleName].settings[i].type === "radio") {
                     newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + (i + 1) + "_" + idNumber;
@@ -300,7 +343,33 @@ async function buildTemplate() {
 
     let layoutMain = "";
     for (let i = 0; i < state.modules.length; i++) {
-        layoutMain += importModules[state.modules[i].moduleName];
+        let layoutModule = importModules[state.modules[i].moduleName]
+
+        let classArr = [];
+        if (state.modules[i].settings) {
+            for (let j = 0; j < Object.keys(state.modules[i].settings).length; j++) {
+                let settingsProp = Object.keys(state.modules[i].settings)[j];
+
+                let settingsType = moduleInfo[state.modules[i].moduleName].settings.find(element => element.id === settingsProp).type;
+                let settingsValueIndex, settingState;
+                // if radio
+                if (settingsType === "radio") {
+                    settingsValueIndex = state.modules[i].settings[settingsProp].split("_")[1];
+                    settingState = moduleInfo[state.modules[i].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
+                }
+                // if checkbox
+                if (settingsType === "checkbox") {
+                    settingsValueIndex = state.modules[i].settings[settingsProp].split("_")[0];
+                    settingState = moduleInfo[state.modules[i].moduleName].settings.find(element => element.id === settingsProp);
+                }
+                classArr.push(settingState.class);
+            }
+        }
+
+        regex = /\[classList\]/gi;
+        layoutModule = layoutModule.replace(regex, classArr.join(" "));
+
+        layoutMain += layoutModule;
     }
     regex = /\[htmlMain\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutMain);
