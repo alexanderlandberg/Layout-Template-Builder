@@ -172,6 +172,7 @@ label.checkbox:hover {
 }
 #module-list li:last-child {
   border: none;
+  max-height: 29px;
 }
 #module-list li.hint {
   opacity: 0.75;

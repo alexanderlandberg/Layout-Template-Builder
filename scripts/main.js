@@ -32,12 +32,14 @@ let moduleInfo = {
             "class": "spacer__small",
             "type": "radio",
             "id": "radio-size",
-            "checked": true,
+            "index": "1",
+            "checked": "checked",
         }, {
             "name": "Spacer Large",
             "class": "spacer__large",
             "type": "radio",
             "id": "radio-size",
+            "index": "2",
         }]
     },
     "intro": {
@@ -80,7 +82,7 @@ let moduleInfo = {
 
 let state = {
     "header": ["header"],
-    "modules": [{ "moduleName": "intro", "moduleIdNumber": "nuYnyl" }, { "moduleName": "spacer", "moduleIdNumber": "eFJGO7", "open": true }, { "moduleName": "cards", "moduleIdNumber": "kN7gW4", "open": true }],
+    "modules": [{ "moduleName": "intro", "moduleIdNumber": "0Lbvj9" }, { "moduleName": "spacer", "moduleIdNumber": "Lqvjdr", "settings": { "radio-size": "radio-size_1_Lqvjdr" }, "open": true }, { "moduleName": "cards", "moduleIdNumber": "f9JkA5", "settings": {}, "open": true }],
     "footer": ["footer"],
     "legal": [],
     "previewSize": "full",
@@ -149,7 +151,6 @@ function updateModuleList() {
             newSettings.classList.add("settings");
 
             let settingsArr = moduleInfo[state.modules[i].moduleName].settings;
-            console.log(settingsArr.length)
             for (let j = 0; j < settingsArr.length; j++) {
 
                 // label
@@ -163,20 +164,24 @@ function updateModuleList() {
 
                 // radio
                 if (settingsArr[j]["type"] === "radio") {
-                    newInput.name = settingsArr[j].id;
+                    newInput.name = settingsArr[j].id + "_" + state.modules[i].moduleIdNumber;
+                    newInput.id = settingsArr[j].id + "_" + settingsArr[j].index + "_" + state.modules[i].moduleIdNumber;
                     newLabel.classList.add("radio");
                 }
 
                 // checkbox
                 if (settingsArr[j]["type"] === "checkbox") {
                     newLabel.classList.add("checkbox");
+                    newInput.id = settingsArr[j].id + "_" + state.modules[i].moduleIdNumber;
                 }
 
                 // shared
                 newInput.type = settingsArr[j]["type"];
+                newInput.setAttribute("onclick", "handleModuleSettings(this)");
 
-                if (settingsArr[j]["checked"]) {
-                    newInput.setAttribute("checked", "checked");
+                // checked if
+                if (newInput.id === state.modules[i].settings[settingsArr[j].id]) {
+                    newInput.checked = "checked";
                 }
 
                 newLabel.appendChild(newInput);
@@ -187,6 +192,35 @@ function updateModuleList() {
         }
         moduleList.appendChild(newItem);
     }
+}
+
+function handleModuleSettings(target) {
+    // console.log(target);
+
+    const clickedItem = target.closest("li");
+    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
+    const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
+
+
+    // radio
+    if (target.type === "radio") {
+        let foundItemSettings = moduleInfo[foundItem.moduleName].settings;
+        let foundItemSettingsProp = foundItemSettings.find(element => element.id === target.id.split("_")[0]).id;
+        foundItem.settings[foundItemSettingsProp] = target.id;
+    }
+
+    // checkbox
+    if (target.type === "checkbox") {
+        console.log("TEST");
+        let foundItemSettings = moduleInfo[foundItem.moduleName].settings;
+        console.log(foundItemSettings);
+        let foundItemSettingsProp = foundItemSettings.find(element => element.id === target.id.split("_")[0]).id;
+        console.log(foundItemSettingsProp);
+        foundItem.settings[foundItemSettingsProp] = target.id;
+    }
+
+    // console.log(foundItem);
+    // console.log(target.id, foundItem.moduleIdNumber, foundItem.settings)
 }
 
 function expandModuleSettings(target) {
@@ -219,6 +253,9 @@ function addModule(moduleName) {
     let newObj = {
         "moduleName": moduleName,
         "moduleIdNumber": makeId(6),
+    }
+    if (moduleInfo[moduleName].settings) {
+        newObj.settings = {};
     }
     state.modules.push(newObj);
     render();
