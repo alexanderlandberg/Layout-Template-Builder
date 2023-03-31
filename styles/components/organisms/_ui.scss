@@ -143,7 +143,7 @@
             user-select: none;
 
             &:hover {
-                background: rgba(65, 153, 212, 0.2);
+                background: rgba($color-ui-blue, .2);
             }
         }
 
@@ -155,6 +155,27 @@
 
     input {
         display: none;
+    }
+
+    &.disabled {
+        border: 1px $color-darkgrey solid;
+        background: $color-lightgrey;
+
+        &>span {
+
+            &>label {
+                color: $color-darkgrey;
+
+                &:hover {
+                    background: $color-lightgrey;
+                }
+            }
+
+            &>input:checked~label {
+                color: $color-white;
+                background: $color-grey;
+            }
+        }
     }
 }
 
@@ -197,6 +218,25 @@
         & span {
             background-color: $color-white;
             left: 29px;
+        }
+    }
+
+    &.disabled {
+        label {
+            border: 1px $color-darkgrey solid;
+            background: $color-lightgrey;
+        }
+
+        span {
+            background-color: $color-grey;
+        }
+
+        input:checked~label {
+            background: $color-grey;
+
+            & span {
+                background-color: $color-lightgrey;
+            }
         }
     }
 }

@@ -1,6 +1,4 @@
 Prio High:
-- Add "state" to local storage
-- Fetch "state" from local storage (if it exists)
 - Add multi-mail storing
 
 Prio Medium:
@@ -8,5 +6,5 @@ Prio Medium:
 - Add function to build UI
 
 Prio Low:
-- Disable zoom when screensize is set to Mobile/Tablet
-- Add reset button with confirmation promt
+- Add confirmation promt to reset button
+- Dark mode color theme

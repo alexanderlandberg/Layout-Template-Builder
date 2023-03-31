@@ -563,6 +563,12 @@ function previewSize(size) {
     const selectedValue = document.querySelector(`#switch-screensize-${size}`);
     selectedValue.setAttribute("checked", "checked");
     state.previewSize = size;
+    // disable zoom if not full
+    if (size !== "full") {
+        document.querySelector("#switch-zoom").classList.add("disabled");
+    } else {
+        document.querySelector("#switch-zoom").classList.remove("disabled");
+    }
     setLocalStorage();
 }
 

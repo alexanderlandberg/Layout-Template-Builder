@@ -35,4 +35,10 @@
             border-color: $color-alert-red;
         }
     }
+
+    &.disabled {
+        border: 1px $color-darkgrey solid;
+        color: $color-darkgrey;
+        background: $color-lightgrey;
+    }
 }

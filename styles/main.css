@@ -63,6 +63,11 @@ h4 {
   background-color: #ff6868;
   border-color: #ff6868;
 }
+.button.disabled {
+  border: 1px #999999 solid;
+  color: #999999;
+  background: #EEEEEE;
+}
 
 input[type=text],
 textarea {
@@ -77,6 +82,12 @@ textarea {
   border-radius: 4px;
   -webkit-appearance: none;
   outline: none;
+}
+input[type=text].disabled,
+textarea.disabled {
+  background: #EEEEEE;
+  color: #999999;
+  border: 0.0625rem solid #999999;
 }
 
 textarea {
@@ -329,6 +340,20 @@ label.checkbox:hover {
 .switch input {
   display: none;
 }
+.switch.disabled {
+  border: 1px #999999 solid;
+  background: #EEEEEE;
+}
+.switch.disabled > span > label {
+  color: #999999;
+}
+.switch.disabled > span > label:hover {
+  background: #EEEEEE;
+}
+.switch.disabled > span > input:checked ~ label {
+  color: #FFFFFF;
+  background: #CCCCCC;
+}
 
 .toggle {
   margin: 0 16px 16px 0;
@@ -369,6 +394,19 @@ label.checkbox:hover {
   background-color: #FFFFFF;
   left: 29px;
 }
+.toggle.disabled label {
+  border: 1px #999999 solid;
+  background: #EEEEEE;
+}
+.toggle.disabled span {
+  background-color: #CCCCCC;
+}
+.toggle.disabled input:checked ~ label {
+  background: #CCCCCC;
+}
+.toggle.disabled input:checked ~ label span {
+  background-color: #EEEEEE;
+}
 
 #preview-ui {
   padding: 20px;
@@ -401,7 +439,7 @@ iframe {
   max-width: 100%;
 }
 
-#iframe[data-scale="25"] iframe {
+#iframe[data-scale="25"][data-size=full] iframe {
   -ms-zoom: 0.25;
   zoom: 0.25;
   transform: scale(0.25);
@@ -409,7 +447,7 @@ iframe {
   height: 400%;
 }
 
-#iframe[data-scale="50"] iframe {
+#iframe[data-scale="50"][data-size=full] iframe {
   -ms-zoom: 0.5;
   zoom: 0.5;
   transform: scale(0.5);
@@ -417,7 +455,7 @@ iframe {
   height: 200%;
 }
 
-#iframe[data-scale="75"] iframe {
+#iframe[data-scale="75"][data-size=full] iframe {
   -ms-zoom: 0.75;
   zoom: 0.75;
   transform: scale(0.75);

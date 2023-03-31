@@ -11,6 +11,12 @@ textarea {
     border-radius: 4px;
     -webkit-appearance: none;
     outline: none;
+
+    &.disabled {
+        background: $color-lightgrey;
+        color: $color-darkgrey;
+        border: rem(1) solid $color-darkgrey;
+    }
 }
 
 textarea {
