@@ -142,6 +142,7 @@ let state = {
 // ---------- MAIN FUNCTIONS ----------
 
 function init() {
+    getLocaleStorage();
     previewSize(state.previewSize);
     previewScale(state.previewZoom);
     downloadForm.addEventListener("submit", preventFormSubmit);
@@ -159,9 +160,13 @@ async function render() {
 
     // update file for download
     updateFile();
+    document.querySelector("input[name='templateName']").value = state.templateName;
 
     // update preview
     preview();
+
+    // set local storage
+    setLocalStorage();
 
     // console.log(state.modules[state.modules.length - 1])
     // console.log(JSON.stringify(state.modules))
@@ -220,6 +225,16 @@ async function buildTemplate() {
 function resetTemplate() {
     state = JSON.parse(JSON.stringify(defaultState));
     render();
+}
+
+function setLocalStorage() {
+    localStorage.setItem("LayoutTemplateBuilderState", JSON.stringify(state))
+}
+
+function getLocaleStorage() {
+    if (localStorage.getItem("LayoutTemplateBuilderState") !== null) {
+        state = JSON.parse(localStorage.getItem("LayoutTemplateBuilderState"));
+    }
 }
 
 // ---------- MODULE LIST ----------
@@ -406,6 +421,7 @@ function expandModuleSettings(target) {
         target.closest("li").classList.remove("open");
         foundItem.open = false;
     }
+    setLocalStorage();
 }
 
 function expandAllSettings() {
@@ -415,6 +431,7 @@ function expandAllSettings() {
             moduleList.children[i].classList.add("open");
         }
     }
+    setLocalStorage();
 }
 
 function collapseAllSettings() {
@@ -424,6 +441,7 @@ function collapseAllSettings() {
             moduleList.children[i].classList.remove("open");
         }
     }
+    setLocalStorage();
 }
 
 function handleModuleSettings(target) {
@@ -506,6 +524,7 @@ function updateFile() {
 function updateTemplateName(target) {
     state.templateName = target.value.length > 0 ? target.value : "template";
     console.log(state.templateName);
+    setLocalStorage();
 }
 
 function downloadTemplate() {
@@ -537,17 +556,23 @@ function preview() {
     iframe.contentWindow.document.write(layoutTemplate + removeScroll);
     iframe.contentWindow.document.close();
 }
+
 function previewSize(size) {
     const previewContainer = document.querySelector("#iframe");
     previewContainer.setAttribute("data-size", `${size}`);
     const selectedValue = document.querySelector(`#switch-screensize-${size}`);
     selectedValue.setAttribute("checked", "checked");
+    state.previewSize = size;
+    setLocalStorage();
 }
+
 function previewScale(scale) {
     const previewContainer = document.querySelector("#iframe");
     previewContainer.setAttribute("data-scale", `${scale}`);
     const selectedValue = document.querySelector(`#switch-zoom-${scale}`);
     selectedValue.setAttribute("checked", "checked");
+    state.previewZoom = scale;
+    setLocalStorage();
 }
 
 // ---------- SUPPORTING FUNCTIONS ----------
