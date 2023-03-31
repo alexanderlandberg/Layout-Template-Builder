@@ -1,9 +1,19 @@
-form * {
-    display: block;
-    margin-bottom: 10px;
+input[type="text"],
+textarea {
+    width: 100%;
+    display: inline-block;
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    font-weight: 400;
+    background-color: $color-white;
+    color: $color-black;
+    border: rem(1) solid $color-ui-blue;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    outline: none;
 }
 
-form textarea {
+textarea {
     width: 100%;
     max-width: 100%;
     min-width: 100%;

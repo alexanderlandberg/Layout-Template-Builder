@@ -1,12 +1,12 @@
 "use strict";
 window.addEventListener("load", init);
 
+// global variables
 let layoutTemplate = "";
 const btn = document.querySelector(".btn");
-const fileText = document.querySelector("#fileText");
 const moduleList = document.querySelector("#module-list");
-
-let moduleInfo = {
+const downloadForm = document.querySelector("#downloadForm");
+const moduleInfo = {
     "dynamicHero": {
         "name": "Dynamic Hero",
         "settings": [{
@@ -119,6 +119,7 @@ let moduleInfo = {
     },
 }
 
+// state
 let state = {
     "header": ["header"],
     "modules": [],
@@ -126,7 +127,10 @@ let state = {
     "legal": [],
     "previewSize": "full",
     "previewZoom": "25",
+    "templateName": "template",
 }
+
+// ---------- MAIN FUNCTIONS ----------
 
 function init() {
     previewSize(state.previewSize);
@@ -152,6 +156,57 @@ async function render() {
     // console.log(state.modules[state.modules.length - 1])
     console.log(JSON.stringify(state.modules))
 }
+
+async function buildTemplate() {
+    let importTemplate = await import("./layouts/_template.js")
+    let importHeaders = await import("./layouts/_headers.js")
+    let importModules = await import("./layouts/_modules.js")
+    let importFooters = await import("./layouts/_footers.js")
+
+    layoutTemplate = importTemplate.template;
+    let regex;
+
+    regex = /\[htmlHeader\]/gi;
+    layoutTemplate = layoutTemplate.replace(regex, (state.header.length > 0 ? importHeaders[state.header] : ""));
+
+    let layoutMain = "";
+    for (let i = 0; i < state.modules.length; i++) {
+        let layoutModule = importModules[state.modules[i].moduleName]
+
+        let classArr = [];
+        if (state.modules[i].settings) {
+            for (let j = 0; j < Object.keys(state.modules[i].settings).length; j++) {
+                let settingsProp = Object.keys(state.modules[i].settings)[j];
+
+                let settingsType = moduleInfo[state.modules[i].moduleName].settings.find(element => element.id === settingsProp).type;
+                let settingsValueIndex, settingState;
+                // if radio
+                if (settingsType === "radio") {
+                    settingsValueIndex = state.modules[i].settings[settingsProp].split("_")[1];
+                    settingState = moduleInfo[state.modules[i].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
+                }
+                // if checkbox
+                if (settingsType === "checkbox") {
+                    settingsValueIndex = state.modules[i].settings[settingsProp].split("_")[0];
+                    settingState = moduleInfo[state.modules[i].moduleName].settings.find(element => element.id === settingsProp);
+                }
+                classArr.push(settingState.class);
+            }
+        }
+
+        regex = /\[classList\]/gi;
+        layoutModule = layoutModule.replace(regex, classArr.join(" "));
+
+        layoutMain += layoutModule;
+    }
+    regex = /\[htmlMain\]/gi;
+    layoutTemplate = layoutTemplate.replace(regex, layoutMain);
+
+    regex = /\[htmlFooter\]/gi;
+    layoutTemplate = layoutTemplate.replace(regex, `${(state.footer.length > 0 ? importFooters[state.footer] : "")}${(state.legal.length > 0 ? importFooters[state.legal] : "")}`);
+}
+
+// ---------- MODULE LIST ----------
 
 function updateModuleList() {
     moduleList.innerHTML = "";
@@ -231,208 +286,6 @@ function updateModuleList() {
         }
         moduleList.appendChild(newItem);
     }
-}
-
-function handleModuleSettings(target) {
-    const clickedItem = target.closest("li");
-    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
-    const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
-
-    // radio
-    if (target.type === "radio") {
-        let foundItemSettings = moduleInfo[foundItem.moduleName].settings;
-        let foundItemSettingsProp = foundItemSettings.find(element => element.id === target.id.split("_")[0]).id;
-        foundItem.settings[foundItemSettingsProp] = target.id;
-    }
-
-    // checkbox
-    if (target.type === "checkbox") {
-        let foundItemSettings = moduleInfo[foundItem.moduleName].settings;
-        let foundItemSettingsProp = foundItemSettings.find(element => element.id === target.id.split("_")[0]).id;
-        if (target.checked) {
-            foundItem.settings[foundItemSettingsProp] = target.id;
-        } else {
-            delete foundItem.settings[foundItemSettingsProp];
-        }
-    }
-    render();
-}
-
-function expandModuleSettings(target) {
-    const clickedItem = target.closest("li");
-    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
-    const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
-    if (!clickedItem.classList.contains("open")) {
-        target.closest("li").classList.add("open");
-        foundItem.open = true;
-    } else {
-        target.closest("li").classList.remove("open");
-        foundItem.open = false;
-    }
-}
-
-function expandAllSettings() {
-    for (let i = 0; i < state.modules.length; i++) {
-        if (moduleInfo[state.modules[i].moduleName].settings) {
-            state.modules[i].open = true;
-            moduleList.children[i].classList.add("open");
-        }
-    }
-}
-function collapseAllSettings() {
-    for (let i = 0; i < state.modules.length; i++) {
-        if (moduleInfo[state.modules[i].moduleName].settings) {
-            state.modules[i].open = false;
-            moduleList.children[i].classList.remove("open");
-        }
-    }
-}
-
-function removeModule(target) {
-    const clickedItem = target.closest("li");
-    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
-    const foundIndex = state.modules.findIndex(element => element.moduleIdNumber === clickedIdNumber);
-    state.modules.splice(foundIndex, 1);
-    render();
-}
-
-function addHeader(moduleName) {
-    state["header"] = [moduleName];
-    render();
-}
-function addModule(moduleName) {
-    let idNumber = makeId(6);
-    let newObj = {
-        "moduleName": moduleName,
-        "moduleIdNumber": idNumber,
-    }
-    if (moduleInfo[moduleName].settings) {
-        newObj.settings = {};
-        for (let i = 0; i < moduleInfo[moduleName].settings.length; i++) {
-            if (moduleInfo[moduleName].settings[i] && moduleInfo[moduleName].settings[i].checked) {
-                // radio
-                if (moduleInfo[moduleName].settings[i].type === "radio") {
-                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + (i + 1) + "_" + idNumber;
-                }
-                // checkbox
-                if (moduleInfo[moduleName].settings[i].type === "checkbox") {
-                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + idNumber;
-                }
-            }
-        }
-    }
-    state.modules.push(newObj);
-    render();
-}
-function addFooter(moduleName) {
-    state["footer"] = [moduleName];
-    render();
-}
-function addLegal(toggle) {
-    if (toggle.checked) {
-        state["legal"] = ["legal"];
-    } else {
-        state["legal"] = [];
-    }
-    render();
-}
-function makeId(length) {
-    let result = "";
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-async function buildTemplate() {
-    let importTemplate = await import("./layouts/_template.js")
-    let importHeaders = await import("./layouts/_headers.js")
-    let importModules = await import("./layouts/_modules.js")
-    let importFooters = await import("./layouts/_footers.js")
-
-    layoutTemplate = importTemplate.template;
-    let regex;
-
-    regex = /\[htmlHeader\]/gi;
-    layoutTemplate = layoutTemplate.replace(regex, (state.header.length > 0 ? importHeaders[state.header] : ""));
-
-    let layoutMain = "";
-    for (let i = 0; i < state.modules.length; i++) {
-        let layoutModule = importModules[state.modules[i].moduleName]
-
-        let classArr = [];
-        if (state.modules[i].settings) {
-            for (let j = 0; j < Object.keys(state.modules[i].settings).length; j++) {
-                let settingsProp = Object.keys(state.modules[i].settings)[j];
-
-                let settingsType = moduleInfo[state.modules[i].moduleName].settings.find(element => element.id === settingsProp).type;
-                let settingsValueIndex, settingState;
-                // if radio
-                if (settingsType === "radio") {
-                    settingsValueIndex = state.modules[i].settings[settingsProp].split("_")[1];
-                    settingState = moduleInfo[state.modules[i].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
-                }
-                // if checkbox
-                if (settingsType === "checkbox") {
-                    settingsValueIndex = state.modules[i].settings[settingsProp].split("_")[0];
-                    settingState = moduleInfo[state.modules[i].moduleName].settings.find(element => element.id === settingsProp);
-                }
-                classArr.push(settingState.class);
-            }
-        }
-
-        regex = /\[classList\]/gi;
-        layoutModule = layoutModule.replace(regex, classArr.join(" "));
-
-        layoutMain += layoutModule;
-    }
-    regex = /\[htmlMain\]/gi;
-    layoutTemplate = layoutTemplate.replace(regex, layoutMain);
-
-    regex = /\[htmlFooter\]/gi;
-    layoutTemplate = layoutTemplate.replace(regex, `${(state.footer.length > 0 ? importFooters[state.footer] : "")}${(state.legal.length > 0 ? importFooters[state.legal] : "")}`);
-}
-
-function updateFile() {
-    fileText.value = layoutTemplate;
-}
-
-function download(filename, text) {
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-}
-
-function preview() {
-    const previewContainer = document.querySelector("#iframe");
-    previewContainer.innerHTML = "";
-    const iframe = document.createElement('iframe');
-    const removeScroll = `<style type="text/css">body::-webkit-scrollbar{display:none;}body{-ms-overflow-style:none;scrollbar-width:none;}</style>`
-    previewContainer.appendChild(iframe);
-    iframe.contentWindow.document.open();
-    iframe.contentWindow.document.write(layoutTemplate + removeScroll);
-    iframe.contentWindow.document.close();
-}
-function previewSize(size) {
-    const previewContainer = document.querySelector("#iframe");
-    previewContainer.setAttribute("data-size", `${size}`);
-    const selectedValue = document.querySelector(`#switch-screensize-${size}`);
-    selectedValue.setAttribute("checked", "checked");
-}
-function previewScale(scale) {
-    const previewContainer = document.querySelector("#iframe");
-    previewContainer.setAttribute("data-scale", `${scale}`);
-    const selectedValue = document.querySelector(`#switch-zoom-${scale}`);
-    selectedValue.setAttribute("checked", "checked");
 }
 
 function handleDragList(list) {
@@ -516,4 +369,180 @@ function handleDragList(list) {
             render();
         };
     }
+}
+
+function removeModule(target) {
+    const clickedItem = target.closest("li");
+    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
+    const foundIndex = state.modules.findIndex(element => element.moduleIdNumber === clickedIdNumber);
+    state.modules.splice(foundIndex, 1);
+    render();
+}
+
+function expandModuleSettings(target) {
+    const clickedItem = target.closest("li");
+    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
+    const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
+    if (!clickedItem.classList.contains("open")) {
+        target.closest("li").classList.add("open");
+        foundItem.open = true;
+    } else {
+        target.closest("li").classList.remove("open");
+        foundItem.open = false;
+    }
+}
+
+function expandAllSettings() {
+    for (let i = 0; i < state.modules.length; i++) {
+        if (moduleInfo[state.modules[i].moduleName].settings) {
+            state.modules[i].open = true;
+            moduleList.children[i].classList.add("open");
+        }
+    }
+}
+
+function collapseAllSettings() {
+    for (let i = 0; i < state.modules.length; i++) {
+        if (moduleInfo[state.modules[i].moduleName].settings) {
+            state.modules[i].open = false;
+            moduleList.children[i].classList.remove("open");
+        }
+    }
+}
+
+function handleModuleSettings(target) {
+    const clickedItem = target.closest("li");
+    const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
+    const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
+
+    // radio
+    if (target.type === "radio") {
+        let foundItemSettings = moduleInfo[foundItem.moduleName].settings;
+        let foundItemSettingsProp = foundItemSettings.find(element => element.id === target.id.split("_")[0]).id;
+        foundItem.settings[foundItemSettingsProp] = target.id;
+    }
+
+    // checkbox
+    if (target.type === "checkbox") {
+        let foundItemSettings = moduleInfo[foundItem.moduleName].settings;
+        let foundItemSettingsProp = foundItemSettings.find(element => element.id === target.id.split("_")[0]).id;
+        if (target.checked) {
+            foundItem.settings[foundItemSettingsProp] = target.id;
+        } else {
+            delete foundItem.settings[foundItemSettingsProp];
+        }
+    }
+    render();
+}
+
+// ---------- ADD MODULES ----------
+
+function addHeader(moduleName) {
+    state["header"] = [moduleName];
+    render();
+}
+
+function addModule(moduleName) {
+    let idNumber = makeId(6);
+    let newObj = {
+        "moduleName": moduleName,
+        "moduleIdNumber": idNumber,
+    }
+    if (moduleInfo[moduleName].settings) {
+        newObj.settings = {};
+        for (let i = 0; i < moduleInfo[moduleName].settings.length; i++) {
+            if (moduleInfo[moduleName].settings[i] && moduleInfo[moduleName].settings[i].checked) {
+                // radio
+                if (moduleInfo[moduleName].settings[i].type === "radio") {
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + (i + 1) + "_" + idNumber;
+                }
+                // checkbox
+                if (moduleInfo[moduleName].settings[i].type === "checkbox") {
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + idNumber;
+                }
+            }
+        }
+    }
+    state.modules.push(newObj);
+    render();
+}
+
+function addFooter(moduleName) {
+    state["footer"] = [moduleName];
+    render();
+}
+
+function addLegal(toggle) {
+    if (toggle.checked) {
+        state["legal"] = ["legal"];
+    } else {
+        state["legal"] = [];
+    }
+    render();
+}
+
+// ---------- DOWNLOAD ----------
+
+function updateFile() {
+    document.querySelector("#fileText").value = layoutTemplate;
+}
+
+function updateTemplateName(target) {
+    state.templateName = target.value.length > 0 ? target.value : "template";
+    console.log(state.templateName);
+}
+
+function downloadTemplate() {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(document.querySelector("#fileText").value));
+    element.setAttribute('download', (state.templateName + ".html"));
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+function preventFormSubmit(event) {
+    event.preventDefault();
+}
+downloadForm.addEventListener("submit", preventFormSubmit);
+
+// ---------- PREVIEW ----------
+
+function preview() {
+    const previewContainer = document.querySelector("#iframe");
+    previewContainer.innerHTML = "";
+    const iframe = document.createElement('iframe');
+    const removeScroll = `<style type="text/css">body::-webkit-scrollbar{display:none;}body{-ms-overflow-style:none;scrollbar-width:none;}</style>`
+    previewContainer.appendChild(iframe);
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write(layoutTemplate + removeScroll);
+    iframe.contentWindow.document.close();
+}
+function previewSize(size) {
+    const previewContainer = document.querySelector("#iframe");
+    previewContainer.setAttribute("data-size", `${size}`);
+    const selectedValue = document.querySelector(`#switch-screensize-${size}`);
+    selectedValue.setAttribute("checked", "checked");
+}
+function previewScale(scale) {
+    const previewContainer = document.querySelector("#iframe");
+    previewContainer.setAttribute("data-scale", `${scale}`);
+    const selectedValue = document.querySelector(`#switch-zoom-${scale}`);
+    selectedValue.setAttribute("checked", "checked");
+}
+
+// ---------- SUPPORTING FUNCTIONS ----------
+
+function makeId(length) {
+    let result = "";
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
