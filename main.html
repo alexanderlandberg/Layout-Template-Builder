@@ -93,7 +93,10 @@
                     <textarea id="fileText" name="htmlText" placeholder="HTML will be output here"></textarea>
                     <div class="label">Template Name</div>
                     <input type="text" name="templateName" value="" placeholder="Name of HTML file" oninput="updateTemplateName(this)">
-                    <input class="button" type="submit" value="Download">
+                    <div class="button-group">
+                        <input class="button" type="submit" value="Download">
+                        <div class="button alert" onclick="resetTemplate()">Reset Template</div>
+                    </div>
                 </form>
             </div>
         </div>

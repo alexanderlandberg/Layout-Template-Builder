@@ -118,6 +118,15 @@ const moduleInfo = {
         }]
     },
 }
+const defaultState = {
+    "header": ["header"],
+    "modules": [],
+    "footer": ["footer"],
+    "legal": [],
+    "previewSize": "full",
+    "previewZoom": "25",
+    "templateName": "template",
+}
 
 // state
 let state = {
@@ -135,6 +144,7 @@ let state = {
 function init() {
     previewSize(state.previewSize);
     previewScale(state.previewZoom);
+    downloadForm.addEventListener("submit", preventFormSubmit);
     render();
 }
 
@@ -154,7 +164,8 @@ async function render() {
     preview();
 
     // console.log(state.modules[state.modules.length - 1])
-    console.log(JSON.stringify(state.modules))
+    // console.log(JSON.stringify(state.modules))
+    console.log(state)
 }
 
 async function buildTemplate() {
@@ -204,6 +215,11 @@ async function buildTemplate() {
 
     regex = /\[htmlFooter\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, `${(state.footer.length > 0 ? importFooters[state.footer] : "")}${(state.legal.length > 0 ? importFooters[state.legal] : "")}`);
+}
+
+function resetTemplate() {
+    state = JSON.parse(JSON.stringify(defaultState));
+    render();
 }
 
 // ---------- MODULE LIST ----------
@@ -508,7 +524,6 @@ function downloadTemplate() {
 function preventFormSubmit(event) {
     event.preventDefault();
 }
-downloadForm.addEventListener("submit", preventFormSubmit);
 
 // ---------- PREVIEW ----------
 

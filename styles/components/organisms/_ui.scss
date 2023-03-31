@@ -158,37 +158,6 @@
     }
 }
 
-.button-group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    margin-bottom: 8px;
-}
-
-.button {
-    display: inline-block;
-    padding: 8px 12px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    border: 1px $color-ui-blue solid;
-    color: $color-ui-blue;
-    background: $color-white;
-    cursor: pointer;
-    border-radius: 4px;
-    margin: 0 8px 8px 0;
-    user-select: none;
-
-    &:hover {
-        color: $color-white;
-        background-color: $color-ui-blue;
-    }
-
-    &:active {
-        background-color: $color-ui-blue-dark;
-    }
-}
-
 .toggle {
     margin: 0 16px 16px 0;
 
