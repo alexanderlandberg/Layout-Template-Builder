@@ -106,7 +106,7 @@ const moduleInfo = {
             "index": "2",
         }, {
             "name": "Background Default",
-            "class": "none",
+            "class": "",
             "type": "radio",
             "id": "radio-bg",
             "index": "1",
@@ -273,127 +273,65 @@ async function buildTemplate() {
     let importFooters = await import("./layouts/_footers.js")
 
     layoutTemplate = importTemplate.template;
-    let regex, classArr, layoutModule, layoutHeader = "", layoutMain = "", layoutFooter = "";
+    let regex, layoutModule, layoutHeader = "", layoutMain = "", layoutFooter = "";
 
     // header
     layoutModule = (state.header.length > 0 ? importHeaders[state.header[0].moduleName] : "")
-    classArr = [];
-    if (state.header[0] && state.header[0].settings) {
-        for (let i = 0; i < Object.keys(state.header[0].settings).length; i++) {
-            let settingsProp = Object.keys(state.header[0].settings)[i];
-
-            let settingsType = moduleInfo[state.header[0].moduleName].settings.find(element => element.id === settingsProp).type;
-            let settingsValueIndex, settingState;
-            // if radio
-            if (settingsType === "radio") {
-                settingsValueIndex = state.header[0].settings[settingsProp].split("_")[1];
-                settingState = moduleInfo[state.header[0].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
-            }
-            // if checkbox
-            if (settingsType === "checkbox") {
-                settingsValueIndex = state.header[0].settings[settingsProp].split("_")[0];
-                settingState = moduleInfo[state.header[0].moduleName].settings.find(element => element.id === settingsProp);
-            }
-            classArr.push(settingState.class);
-        }
-    }
-    regex = /\[classList\]/gi;
-    layoutModule = layoutModule.replace(regex, classArr.join(" "));
-    layoutHeader += layoutModule;
-
+    layoutHeader += addClassList(layoutModule, "header");
     regex = /\[htmlHeader\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutHeader);
 
     // main
     for (let i = 0; i < state.modules.length; i++) {
         layoutModule = importModules[state.modules[i].moduleName]
-
-        classArr = [];
-        if (state.modules[i].settings) {
-            for (let j = 0; j < Object.keys(state.modules[i].settings).length; j++) {
-                let settingsProp = Object.keys(state.modules[i].settings)[j];
-
-                let settingsType = moduleInfo[state.modules[i].moduleName].settings.find(element => element.id === settingsProp).type;
-                let settingsValueIndex, settingState;
-                // if radio
-                if (settingsType === "radio") {
-                    settingsValueIndex = state.modules[i].settings[settingsProp].split("_")[1];
-                    settingState = moduleInfo[state.modules[i].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
-                }
-                // if checkbox
-                if (settingsType === "checkbox") {
-                    settingsValueIndex = state.modules[i].settings[settingsProp].split("_")[0];
-                    settingState = moduleInfo[state.modules[i].moduleName].settings.find(element => element.id === settingsProp);
-                }
-                classArr.push(settingState.class);
-            }
-        }
-
-        regex = /\[classList\]/gi;
-        layoutModule = layoutModule.replace(regex, classArr.join(" "));
-
-        layoutMain += layoutModule;
+        layoutMain += addClassList(layoutModule, "modules", i);
     }
     regex = /\[htmlMain\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutMain);
 
     // footer
     layoutModule = (state.footer.length > 0 ? importFooters[state.footer[0].moduleName] : "")
-    classArr = [];
-    if (state.footer[0] && state.footer[0].settings) {
-        for (let i = 0; i < Object.keys(state.footer[0].settings).length; i++) {
-            let settingsProp = Object.keys(state.footer[0].settings)[i];
-
-            let settingsType = moduleInfo[state.footer[0].moduleName].settings.find(element => element.id === settingsProp).type;
-            let settingsValueIndex, settingState;
-            // if radio
-            if (settingsType === "radio") {
-                settingsValueIndex = state.footer[0].settings[settingsProp].split("_")[1];
-                settingState = moduleInfo[state.footer[0].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
-            }
-            // if checkbox
-            if (settingsType === "checkbox") {
-                settingsValueIndex = state.footer[0].settings[settingsProp].split("_")[0];
-                settingState = moduleInfo[state.footer[0].moduleName].settings.find(element => element.id === settingsProp);
-            }
-            classArr.push(settingState.class);
-        }
-    }
-    regex = /\[classList\]/gi;
-    layoutModule = layoutModule.replace(regex, classArr.join(" "));
-    layoutFooter += layoutModule;
+    layoutFooter += addClassList(layoutModule, "footer");
 
     // legal
     layoutModule = (state.legal.length > 0 ? importFooters[state.legal[0].moduleName] : "")
-    classArr = [];
-    if (state.legal[0] && state.legal[0].settings) {
-        for (let i = 0; i < Object.keys(state.legal[0].settings).length; i++) {
-            let settingsProp = Object.keys(state.legal[0].settings)[i];
-
-            let settingsType = moduleInfo[state.legal[0].moduleName].settings.find(element => element.id === settingsProp).type;
-            let settingsValueIndex, settingState;
-            // if radio
-            if (settingsType === "radio") {
-                settingsValueIndex = state.legal[0].settings[settingsProp].split("_")[1];
-                settingState = moduleInfo[state.legal[0].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
-            }
-            // if checkbox
-            if (settingsType === "checkbox") {
-                settingsValueIndex = state.legal[0].settings[settingsProp].split("_")[0];
-                settingState = moduleInfo[state.legal[0].moduleName].settings.find(element => element.id === settingsProp);
-            }
-            classArr.push(settingState.class);
-        }
-    }
-    regex = /\[classList\]/gi;
-    layoutModule = layoutModule.replace(regex, classArr.join(" "));
-    layoutFooter += layoutModule;
+    layoutFooter += addClassList(layoutModule, "legal");
 
     regex = /\[currentYear\]/gi;
     layoutFooter = layoutFooter.replace(regex, new Date().getFullYear());
 
     regex = /\[htmlFooter\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutFooter);
+
+    function addClassList(layoutModule, listGroup, index) {
+        if (listGroup !== "modules") {
+            index = 0;
+        }
+        let classArr = [];
+        if (state[listGroup][index] && state[listGroup][index].settings) {
+            for (let i = 0; i < Object.keys(state[listGroup][index].settings).length; i++) {
+                let settingsProp = Object.keys(state[listGroup][index].settings)[i];
+
+                let settingsType = moduleInfo[state[listGroup][index].moduleName].settings.find(element => element.id === settingsProp).type;
+                let settingsValueIndex, settingState;
+                // if radio
+                if (settingsType === "radio") {
+                    settingsValueIndex = state[listGroup][index].settings[settingsProp].split("_")[1];
+                    settingState = moduleInfo[state[listGroup][index].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
+                }
+                // if checkbox
+                if (settingsType === "checkbox") {
+                    settingsValueIndex = state[listGroup][index].settings[settingsProp].split("_")[0];
+                    settingState = moduleInfo[state[listGroup][index].moduleName].settings.find(element => element.id === settingsProp);
+                }
+                classArr.push(settingState.class);
+            }
+        }
+        regex = /\[classList\]/gi;
+        layoutModule = layoutModule.replace(regex, classArr.join(" "));
+        return layoutModule;
+    }
+
 }
 
 function resetTemplate() {
