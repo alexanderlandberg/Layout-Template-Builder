@@ -15,6 +15,11 @@ const moduleInfo = {
             "type": "checkbox",
             "id": "checkbox-bg",
             "checked": "checked",
+        }, {
+            "name": "Invert",
+            "class": "inverted",
+            "type": "checkbox",
+            "id": "checkbox-invert"
         }]
     },
     "imageProduct": {
@@ -25,6 +30,11 @@ const moduleInfo = {
             "type": "checkbox",
             "id": "checkbox-bg",
             "checked": "checked",
+        }, {
+            "name": "Invert",
+            "class": "inverted",
+            "type": "checkbox",
+            "id": "checkbox-invert"
         }]
     },
     "imageForm": {
@@ -35,6 +45,11 @@ const moduleInfo = {
             "type": "checkbox",
             "id": "checkbox-bg",
             "checked": "checked",
+        }, {
+            "name": "Invert",
+            "class": "inverted",
+            "type": "checkbox",
+            "id": "checkbox-invert"
         }]
     },
     "textForm": {
@@ -45,6 +60,11 @@ const moduleInfo = {
             "type": "checkbox",
             "id": "checkbox-bg",
             "checked": "checked",
+        }, {
+            "name": "Invert",
+            "class": "inverted",
+            "type": "checkbox",
+            "id": "checkbox-invert"
         }]
     },
     "spacer": {
@@ -63,10 +83,24 @@ const moduleInfo = {
             "id": "radio-size",
             "index": "2",
         }, {
+            "name": "Background Default",
+            "class": "none",
+            "type": "radio",
+            "id": "radio-bg",
+            "index": "1",
+            "checked": "checked",
+        }, {
             "name": "Background Grey",
             "class": "t-bg-color-grey",
-            "type": "checkbox",
-            "id": "checkbox-bg",
+            "type": "radio",
+            "id": "radio-bg",
+            "index": "2",
+        }, {
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "radio",
+            "id": "radio-bg",
+            "index": "3",
         }]
     },
     "intro": {
@@ -99,6 +133,11 @@ const moduleInfo = {
     "sideBySide": {
         "name": "Side By Side",
         "settings": [{
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+        }, {
             "name": "Invert",
             "class": "inverted",
             "type": "checkbox",
@@ -124,7 +163,7 @@ const defaultState = {
     "footer": ["footer"],
     "legal": [],
     "previewSize": "full",
-    "previewZoom": "25",
+    "previewZoom": "100",
     "templateName": "template",
 }
 
@@ -170,7 +209,7 @@ async function render() {
 
     // console.log(state.modules[state.modules.length - 1])
     // console.log(JSON.stringify(state.modules))
-    console.log(state)
+    // console.log(state)
 }
 
 async function buildTemplate() {
@@ -223,7 +262,10 @@ async function buildTemplate() {
 }
 
 function resetTemplate() {
-    state = JSON.parse(JSON.stringify(defaultState));
+    state.header = JSON.parse(JSON.stringify(defaultState)).header;
+    state.modules = JSON.parse(JSON.stringify(defaultState)).modules;
+    state.footer = JSON.parse(JSON.stringify(defaultState)).footer;
+    state.legal = JSON.parse(JSON.stringify(defaultState)).legal;
     render();
 }
 
@@ -488,7 +530,7 @@ function addModule(moduleName) {
             if (moduleInfo[moduleName].settings[i] && moduleInfo[moduleName].settings[i].checked) {
                 // radio
                 if (moduleInfo[moduleName].settings[i].type === "radio") {
-                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + (i + 1) + "_" + idNumber;
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + moduleInfo[moduleName].settings[i].index + "_" + idNumber;
                 }
                 // checkbox
                 if (moduleInfo[moduleName].settings[i].type === "checkbox") {
@@ -564,10 +606,17 @@ function previewSize(size) {
     selectedValue.setAttribute("checked", "checked");
     state.previewSize = size;
     // disable zoom if not full
+    const switchZoom = document.querySelector("#switch-zoom");
     if (size !== "full") {
-        document.querySelector("#switch-zoom").classList.add("disabled");
+        switchZoom.classList.add("disabled");
+        for (let i = 0; i < switchZoom.children.length; i++) {
+            switchZoom.children[i].children[0].setAttribute("disabled", "disabled");
+        }
     } else {
-        document.querySelector("#switch-zoom").classList.remove("disabled");
+        switchZoom.classList.remove("disabled");
+        for (let i = 0; i < switchZoom.children.length; i++) {
+            switchZoom.children[i].children[0].removeAttribute("disabled");
+        }
     }
     setLocalStorage();
 }

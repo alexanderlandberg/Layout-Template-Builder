@@ -239,7 +239,7 @@ label.checkbox:hover {
   opacity: 1;
 }
 #module-list li.open {
-  max-height: 100px;
+  max-height: 140px;
 }
 #module-list li.open .expand::after {
   transform: rotate(-180deg);
