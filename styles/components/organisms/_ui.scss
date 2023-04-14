@@ -1,4 +1,4 @@
-#module-list {
+.moduleList {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -8,8 +8,12 @@
     opacity: 0;
     margin-bottom: 16px;
 
-    &.dragList {
+    &.dragList, &#header-module-list {
         opacity: 1;
+    }
+
+    &.dragList li {
+        cursor: move;
     }
 
     li {
@@ -22,7 +26,6 @@
         color: #4199D4;
         border-bottom: 1px solid #4199D4;
         margin: 0 0 0px 0;
-        cursor: move;
         user-select: none;
         transition: max-height .5s $easing;
 

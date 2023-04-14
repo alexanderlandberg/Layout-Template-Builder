@@ -30,6 +30,11 @@
                 </div>
             </div>
             <div class="ui-row">
+                <div class="label">Selected Header</div>
+                <ul id="header-module-list" class="moduleList">
+                </ul>
+            </div>
+            <div class="ui-row">
                 <div class="label">Modules</div>
                 <div class="button-group">
                     <div class="button" onclick="addModule('dynamicHero')">Dynamic Hero +</div>
@@ -51,7 +56,8 @@
             </div>
             <div class="ui-row">
                 <div class="label">Module List <span class="collapse-all" onclick="collapseAllSettings()">Collapse All</span><span class="expand-all" onclick="expandAllSettings()">Expand All</span></div>
-                <ul id="module-list" class="dragList"></ul>
+                <ul id="main-module-list" class="moduleList">
+                </ul>
             </div>
             <div class="ui-row">
                 <div class="ui-col">
@@ -92,6 +98,11 @@
                         </label>
                     </div>
                 </div>
+            </div>
+            <div class="ui-row">
+                <div class="label">Selected Footer</div>
+                <ul id="footer-module-list" class="moduleList">
+                </ul>
             </div>
             <div class="ui-row">
                 <form id="downloadForm" onsubmit="downloadTemplate()">

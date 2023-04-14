@@ -198,7 +198,7 @@ label.checkbox:hover {
   color: #CCCCCC;
 }
 
-#module-list {
+.moduleList {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -208,10 +208,13 @@ label.checkbox:hover {
   opacity: 0;
   margin-bottom: 16px;
 }
-#module-list.dragList {
+.moduleList.dragList, .moduleList#header-module-list {
   opacity: 1;
 }
-#module-list li {
+.moduleList.dragList li {
+  cursor: move;
+}
+.moduleList li {
   position: relative;
   font-size: 12px;
   font-weight: 700;
@@ -221,39 +224,38 @@ label.checkbox:hover {
   color: #4199D4;
   border-bottom: 1px solid #4199D4;
   margin: 0 0 0px 0;
-  cursor: move;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
   transition: max-height 0.5s ease;
 }
-#module-list li:last-child {
+.moduleList li:last-child {
   border: none;
   max-height: 29px;
 }
-#module-list li.hint {
+.moduleList li.hint {
   opacity: 0.75;
 }
-#module-list li.active {
+.moduleList li.active {
   background: #EEEEEE;
   opacity: 1;
 }
-#module-list li.open {
+.moduleList li.open {
   max-height: 140px;
 }
-#module-list li.open .expand::after {
+.moduleList li.open .expand::after {
   transform: rotate(-180deg);
 }
-#module-list .list-item {
+.moduleList .list-item {
   display: flex;
   justify-content: space-between;
   margin: 8px;
 }
-#module-list .list-item .module-name {
+.moduleList .list-item .module-name {
   padding-right: 8px;
 }
-#module-list .list-item .close::after,
-#module-list .list-item .expand::after {
+.moduleList .list-item .close::after,
+.moduleList .list-item .expand::after {
   display: block;
   font-family: "Material Symbols Outlined";
   font-size: 12px;
@@ -262,17 +264,17 @@ label.checkbox:hover {
   width: 12px;
   cursor: pointer;
 }
-#module-list .list-item .expand::after {
+.moduleList .list-item .expand::after {
   content: "expand_more";
   transition: transform 0.5s ease;
 }
-#module-list .list-item .close::after {
+.moduleList .list-item .close::after {
   content: "close";
 }
-#module-list .list-item .expand {
+.moduleList .list-item .expand {
   flex-grow: 1;
 }
-#module-list .settings {
+.moduleList .settings {
   margin: 8px;
 }
 

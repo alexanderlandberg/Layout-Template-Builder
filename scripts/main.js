@@ -4,9 +4,31 @@ window.addEventListener("load", init);
 // global variables
 let layoutTemplate = "";
 const btn = document.querySelector(".btn");
-const moduleList = document.querySelector("#module-list");
+const headerList = document.querySelector("#header-module-list");
+const moduleList = document.querySelector("#main-module-list");
+const footerList = document.querySelector("#footer-module-list");
 const downloadForm = document.querySelector("#downloadForm");
 const moduleInfo = {
+    "hero": {
+        "name": "Hero",
+        "settings": [{
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+            "checked": "checked",
+        }]
+    },
+    "header": {
+        "name": "Header",
+        "settings": [{
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+            "checked": "checked",
+        }]
+    },
     "dynamicHero": {
         "name": "Dynamic Hero",
         "settings": [{
@@ -158,7 +180,7 @@ const moduleInfo = {
     },
 }
 const defaultState = {
-    "header": ["header"],
+    "header": [],
     "modules": [],
     "footer": ["footerENG"],
     "legal": [],
@@ -169,7 +191,7 @@ const defaultState = {
 
 // state
 let state = {
-    "header": ["header"],
+    "header": [],
     "modules": [],
     "footer": ["footer"],
     "legal": [],
@@ -191,8 +213,9 @@ function init() {
 async function render() {
 
     // update module list
-    updateModuleList();
-    handleDragList(document.querySelector("#module-list"));
+    updateModuleList("header");
+    updateModuleList("modules");
+    handleDragList(document.querySelector("#main-module-list"));
 
     // build template
     await buildTemplate();
@@ -209,7 +232,7 @@ async function render() {
 
     // console.log(state.modules[state.modules.length - 1])
     // console.log(JSON.stringify(state.modules))
-    // console.log(state)
+    console.log("RENDER state header", state.header[0])
 }
 
 async function buildTemplate() {
@@ -219,18 +242,42 @@ async function buildTemplate() {
     let importFooters = await import("./layouts/_footers.js")
 
     layoutTemplate = importTemplate.template;
-    let regex, layoutHeader = "", layoutMain = "", layoutFooter = "";
+    let regex, classArr, layoutModule, layoutHeader = "", layoutMain = "", layoutFooter = "";
 
     // header
-    layoutHeader = importHeaders[state.header];
+    layoutModule = (state.header.length > 0 ? importHeaders[state.header[0].moduleName] : "")
+    classArr = [];
+    if (state.header[0].settings) {
+        for (let i = 0; i < Object.keys(state.header[0].settings).length; i++) {
+            let settingsProp = Object.keys(state.header[0].settings)[i];
+
+            let settingsType = moduleInfo[state.header[0].moduleName].settings.find(element => element.id === settingsProp).type;
+            let settingsValueIndex, settingState;
+            // if radio
+            if (settingsType === "radio") {
+                settingsValueIndex = state.header[0].settings[settingsProp].split("_")[1];
+                settingState = moduleInfo[state.header[0].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
+            }
+            // if checkbox
+            if (settingsType === "checkbox") {
+                settingsValueIndex = state.header[0].settings[settingsProp].split("_")[0];
+                settingState = moduleInfo[state.header[0].moduleName].settings.find(element => element.id === settingsProp);
+            }
+            classArr.push(settingState.class);
+        }
+    }
+    regex = /\[classList\]/gi;
+    layoutModule = layoutModule.replace(regex, classArr.join(" "));
+    layoutHeader += layoutModule;
+
     regex = /\[htmlHeader\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutHeader);
 
     // main
     for (let i = 0; i < state.modules.length; i++) {
-        let layoutModule = importModules[state.modules[i].moduleName]
+        layoutModule = importModules[state.modules[i].moduleName]
 
-        let classArr = [];
+        classArr = [];
         if (state.modules[i].settings) {
             for (let j = 0; j < Object.keys(state.modules[i].settings).length; j++) {
                 let settingsProp = Object.keys(state.modules[i].settings)[j];
@@ -260,7 +307,7 @@ async function buildTemplate() {
     layoutTemplate = layoutTemplate.replace(regex, layoutMain);
 
     // footer
-    layoutFooter = importFooters[state.footer] + (state.legal.length > 0 ? importFooters[state.legal] : "");
+    layoutFooter = (state.footer.length > 0 ? importFooters[state.footer] : "") + (state.legal.length > 0 ? importFooters[state.legal] : "");
     regex = /\[currentYear\]/gi;
     layoutFooter = layoutFooter.replace(regex, new Date().getFullYear());
 
@@ -288,12 +335,18 @@ function getLocaleStorage() {
 
 // ---------- MODULE LIST ----------
 
-function updateModuleList() {
-    moduleList.innerHTML = "";
-    for (let i = 0; i < state.modules.length; i++) {
+function updateModuleList(listGroup) {
+
+    if (listGroup === "modules") {
+        moduleList.innerHTML = "";
+    } else if (listGroup === "header") {
+        headerList.innerHTML = "";
+    }
+
+    for (let i = 0; i < state[listGroup].length; i++) {
         let newItem = document.createElement("li");
-        newItem.setAttribute("data-moduleIdNumber", state.modules[i].moduleIdNumber);
-        if (state.modules[i].open) {
+        newItem.setAttribute("data-moduleIdNumber", state[listGroup][i].moduleIdNumber);
+        if (state[listGroup][i].open) {
             newItem.classList.add("open");
         }
         // list item
@@ -302,29 +355,31 @@ function updateModuleList() {
 
         let newExpand = document.createElement("div");
         newExpand.classList.add("expand");
-        newExpand.setAttribute("onclick", "expandModuleSettings(this)");
+        newExpand.setAttribute("onclick", `expandModuleSettings(this, "${listGroup}")`);
 
         let newModuleName = document.createElement("div");
         newModuleName.classList.add("module-name");
-        newModuleName.innerHTML = moduleInfo[state.modules[i].moduleName].name;
+        newModuleName.innerHTML = moduleInfo[state[listGroup][i].moduleName].name;
 
         let newClose = document.createElement("div");
         newClose.classList.add("close");
-        newClose.setAttribute("onclick", "removeModule(this)");
+        newClose.setAttribute("onclick", `removeModule(this), "${listGroup}"`);
 
         newListItem.appendChild(newModuleName);
-        if (moduleInfo[state.modules[i].moduleName].settings) {
+        if (moduleInfo[state[listGroup][i].moduleName].settings) {
             newListItem.appendChild(newExpand);
         }
-        newListItem.appendChild(newClose);
+        if (listGroup === "modules") {
+            newListItem.appendChild(newClose);
+        }
         newItem.appendChild(newListItem);
 
         // settings
-        if (moduleInfo[state.modules[i].moduleName].settings) {
+        if (moduleInfo[state[listGroup][i].moduleName].settings) {
             let newSettings = document.createElement("div");
             newSettings.classList.add("settings");
 
-            let settingsArr = moduleInfo[state.modules[i].moduleName].settings;
+            let settingsArr = moduleInfo[state[listGroup][i].moduleName].settings;
             for (let j = 0; j < settingsArr.length; j++) {
 
                 // label
@@ -338,23 +393,23 @@ function updateModuleList() {
 
                 // radio
                 if (settingsArr[j]["type"] === "radio") {
-                    newInput.name = settingsArr[j].id + "_" + state.modules[i].moduleIdNumber;
-                    newInput.id = settingsArr[j].id + "_" + settingsArr[j].index + "_" + state.modules[i].moduleIdNumber;
+                    newInput.name = settingsArr[j].id + "_" + state[listGroup][i].moduleIdNumber;
+                    newInput.id = settingsArr[j].id + "_" + settingsArr[j].index + "_" + state[listGroup][i].moduleIdNumber;
                     newLabel.classList.add("radio");
                 }
 
                 // checkbox
                 if (settingsArr[j]["type"] === "checkbox") {
                     newLabel.classList.add("checkbox");
-                    newInput.id = settingsArr[j].id + "_" + state.modules[i].moduleIdNumber;
+                    newInput.id = settingsArr[j].id + "_" + state[listGroup][i].moduleIdNumber;
                 }
 
                 // shared
                 newInput.type = settingsArr[j]["type"];
-                newInput.setAttribute("onclick", "handleModuleSettings(this)");
+                newInput.setAttribute("onclick", `handleModuleSettings(this, "${listGroup}")`);
 
                 // checked if
-                if (newInput.id === state.modules[i].settings[settingsArr[j].id]) {
+                if (newInput.id === state[listGroup][i].settings[settingsArr[j].id]) {
                     newInput.checked = "checked";
                 }
 
@@ -364,7 +419,11 @@ function updateModuleList() {
             }
             newItem.appendChild(newSettings);
         }
-        moduleList.appendChild(newItem);
+        if (listGroup === "modules") {
+            moduleList.appendChild(newItem);
+        } else if (listGroup === "header") {
+            headerList.appendChild(newItem);
+        }
     }
 }
 
@@ -459,10 +518,11 @@ function removeModule(target) {
     render();
 }
 
-function expandModuleSettings(target) {
+function expandModuleSettings(target, listGroup) {
+    console.log("OHH", listGroup);
     const clickedItem = target.closest("li");
     const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
-    const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
+    const foundItem = state[listGroup].find(element => element.moduleIdNumber === clickedIdNumber);
     if (!clickedItem.classList.contains("open")) {
         target.closest("li").classList.add("open");
         foundItem.open = true;
@@ -493,10 +553,10 @@ function collapseAllSettings() {
     setLocalStorage();
 }
 
-function handleModuleSettings(target) {
+function handleModuleSettings(target, listGroup) {
     const clickedItem = target.closest("li");
     const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
-    const foundItem = state.modules.find(element => element.moduleIdNumber === clickedIdNumber);
+    const foundItem = state[listGroup].find(element => element.moduleIdNumber === clickedIdNumber);
 
     // radio
     if (target.type === "radio") {
@@ -521,8 +581,31 @@ function handleModuleSettings(target) {
 // ---------- ADD MODULES ----------
 
 function addHeader(moduleName) {
-    state["header"] = [moduleName];
+    let idNumber = makeId(6);
+    let newObj = {
+        "moduleName": moduleName,
+        "moduleIdNumber": idNumber,
+    }
+    if (moduleInfo[moduleName].settings) {
+        newObj.settings = {};
+        for (let i = 0; i < moduleInfo[moduleName].settings.length; i++) {
+            if (moduleInfo[moduleName].settings[i] && moduleInfo[moduleName].settings[i].checked) {
+                // radio
+                if (moduleInfo[moduleName].settings[i].type === "radio") {
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + moduleInfo[moduleName].settings[i].index + "_" + idNumber;
+                }
+                // checkbox
+                if (moduleInfo[moduleName].settings[i].type === "checkbox") {
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + idNumber;
+                }
+            }
+        }
+    }
+    state.header = [newObj];
     render();
+    // state["header"] = [moduleName];
+    // render();
+    // console.log(state)
 }
 
 function addModule(moduleName) {

@@ -1,4 +1,4 @@
-export const header = `<div class="module header t-bg-color-blue">
+export const header = `<div class="module header [classList]">
     <div class="module__cell">
         <div class="module__cell-item header__content">
             <div class="header__logo">
@@ -8,7 +8,7 @@ export const header = `<div class="module header t-bg-color-blue">
     </div>
 </div>`;
 
-export const hero = `<div class="module hero t-bg-color-blue">
+export const hero = `<div class="module hero [classList]">
     <div class="module__cell">
         <div class="module__cell-item hero__image">
             <img src="https://storage.pardot.com/645703/1645442767KyzJ7aNE/hero_1920x1024.png" alt="" pardot-region="editable__HeroModule-bg" pardot-region-type="image">
