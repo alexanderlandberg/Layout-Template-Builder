@@ -160,7 +160,7 @@ const moduleInfo = {
 const defaultState = {
     "header": ["header"],
     "modules": [],
-    "footer": ["footer"],
+    "footer": ["footerENG"],
     "legal": [],
     "previewSize": "full",
     "previewZoom": "100",
@@ -219,12 +219,14 @@ async function buildTemplate() {
     let importFooters = await import("./layouts/_footers.js")
 
     layoutTemplate = importTemplate.template;
-    let regex;
+    let regex, layoutHeader = "", layoutMain = "", layoutFooter = "";
 
+    // header
+    layoutHeader = importHeaders[state.header];
     regex = /\[htmlHeader\]/gi;
-    layoutTemplate = layoutTemplate.replace(regex, (state.header.length > 0 ? importHeaders[state.header] : ""));
+    layoutTemplate = layoutTemplate.replace(regex, layoutHeader);
 
-    let layoutMain = "";
+    // main
     for (let i = 0; i < state.modules.length; i++) {
         let layoutModule = importModules[state.modules[i].moduleName]
 
@@ -257,8 +259,13 @@ async function buildTemplate() {
     regex = /\[htmlMain\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutMain);
 
+    // footer
+    layoutFooter = importFooters[state.footer] + (state.legal.length > 0 ? importFooters[state.legal] : "");
+    regex = /\[currentYear\]/gi;
+    layoutFooter = layoutFooter.replace(regex, new Date().getFullYear());
+
     regex = /\[htmlFooter\]/gi;
-    layoutTemplate = layoutTemplate.replace(regex, `${(state.footer.length > 0 ? importFooters[state.footer] : "")}${(state.legal.length > 0 ? importFooters[state.legal] : "")}`);
+    layoutTemplate = layoutTemplate.replace(regex, layoutFooter);
 }
 
 function resetTemplate() {

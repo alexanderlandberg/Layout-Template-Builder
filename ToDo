@@ -1,9 +1,10 @@
 Prio High:
 - Add multi-mail storing
+- Enable settings for headers, footers and legal
 
 Prio Medium:
-- Enable settings for headers, footers and legal
 - Add function to build UI
+- Fix drag preview image (when settings are collapsed)
 
 Prio Low:
 - Add confirmation promt to reset button
