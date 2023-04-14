@@ -188,6 +188,16 @@ const moduleInfo = {
             "checked": "checked",
         }]
     },
+    "legal": {
+        "name": "Legal",
+        "settings": [{
+            "name": "Background Dark Blue",
+            "class": "t-bg-color-dark-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+            "checked": "checked",
+        }]
+    },
     get footerFR() {
         return this["footerENG"]
     },
@@ -253,7 +263,7 @@ async function render() {
 
     // console.log(state.modules[state.modules.length - 1])
     // console.log(JSON.stringify(state.modules))
-    console.log(state.header)
+    console.log(state.legal)
 }
 
 async function buildTemplate() {
@@ -353,16 +363,37 @@ async function buildTemplate() {
     layoutModule = layoutModule.replace(regex, classArr.join(" "));
     layoutFooter += layoutModule;
 
+    // legal
+    layoutModule = (state.legal.length > 0 ? importFooters[state.legal[0].moduleName] : "")
+    classArr = [];
+    if (state.legal[0] && state.legal[0].settings) {
+        for (let i = 0; i < Object.keys(state.legal[0].settings).length; i++) {
+            let settingsProp = Object.keys(state.legal[0].settings)[i];
+
+            let settingsType = moduleInfo[state.legal[0].moduleName].settings.find(element => element.id === settingsProp).type;
+            let settingsValueIndex, settingState;
+            // if radio
+            if (settingsType === "radio") {
+                settingsValueIndex = state.legal[0].settings[settingsProp].split("_")[1];
+                settingState = moduleInfo[state.legal[0].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
+            }
+            // if checkbox
+            if (settingsType === "checkbox") {
+                settingsValueIndex = state.legal[0].settings[settingsProp].split("_")[0];
+                settingState = moduleInfo[state.legal[0].moduleName].settings.find(element => element.id === settingsProp);
+            }
+            classArr.push(settingState.class);
+        }
+    }
+    regex = /\[classList\]/gi;
+    layoutModule = layoutModule.replace(regex, classArr.join(" "));
+    layoutFooter += layoutModule;
+
+    regex = /\[currentYear\]/gi;
+    layoutFooter = layoutFooter.replace(regex, new Date().getFullYear());
+
     regex = /\[htmlFooter\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutFooter);
-
-
-    // layoutFooter = (state.footer.length > 0 ? importFooters[state.footer] : "") + (state.legal.length > 0 ? importFooters[state.legal] : "");
-    // regex = /\[currentYear\]/gi;
-    // layoutFooter = layoutFooter.replace(regex, new Date().getFullYear());
-
-    // regex = /\[htmlFooter\]/gi;
-    // layoutTemplate = layoutTemplate.replace(regex, layoutFooter);
 }
 
 function resetTemplate() {
@@ -393,6 +424,8 @@ function updateModuleList(listGroup) {
         headerList.innerHTML = "";
     } else if (listGroup === "footer") {
         footerList.innerHTML = "";
+    } else if (listGroup === "legal") {
+        // legal
     }
 
     for (let i = 0; i < state[listGroup].length; i++) {
@@ -476,6 +509,8 @@ function updateModuleList(listGroup) {
         } else if (listGroup === "header") {
             headerList.appendChild(newItem);
         } else if (listGroup === "footer") {
+            footerList.appendChild(newItem);
+        } else if (listGroup === "legal") {
             footerList.appendChild(newItem);
         }
     }
@@ -573,7 +608,6 @@ function removeModule(target) {
 }
 
 function expandModuleSettings(target, listGroup) {
-    console.log("OHH", listGroup);
     const clickedItem = target.closest("li");
     const clickedIdNumber = clickedItem.getAttribute("data-moduleidnumber");
     const foundItem = state[listGroup].find(element => element.moduleIdNumber === clickedIdNumber);
@@ -634,7 +668,7 @@ function handleModuleSettings(target, listGroup) {
 
 // ---------- ADD MODULES ----------
 
-function addHeader(moduleName) {
+function addModule(moduleName, listGroup, toggle) {
     let idNumber = makeId(6);
     let newObj = {
         "moduleName": moduleName,
@@ -655,65 +689,19 @@ function addHeader(moduleName) {
             }
         }
     }
-    state.header = [newObj];
-    render();
-}
-
-function addModule(moduleName) {
-    let idNumber = makeId(6);
-    let newObj = {
-        "moduleName": moduleName,
-        "moduleIdNumber": idNumber,
-    }
-    if (moduleInfo[moduleName].settings) {
-        newObj.settings = {};
-        for (let i = 0; i < moduleInfo[moduleName].settings.length; i++) {
-            if (moduleInfo[moduleName].settings[i] && moduleInfo[moduleName].settings[i].checked) {
-                // radio
-                if (moduleInfo[moduleName].settings[i].type === "radio") {
-                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + moduleInfo[moduleName].settings[i].index + "_" + idNumber;
-                }
-                // checkbox
-                if (moduleInfo[moduleName].settings[i].type === "checkbox") {
-                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + idNumber;
-                }
-            }
+    listGroup
+    if (listGroup === "modules") {
+        state.modules.push(newObj);
+    } else if (listGroup === "header") {
+        state.header = [newObj];
+    } else if (listGroup === "footer") {
+        state.footer = [newObj];
+    } else if (listGroup === "legal") {
+        if (toggle.checked) {
+            state.legal = [newObj];
+        } else {
+            state["legal"] = [];
         }
-    }
-    state.modules.push(newObj);
-    render();
-}
-
-function addFooter(moduleName) {
-    let idNumber = makeId(6);
-    let newObj = {
-        "moduleName": moduleName,
-        "moduleIdNumber": idNumber,
-    }
-    if (moduleInfo[moduleName].settings) {
-        newObj.settings = {};
-        for (let i = 0; i < moduleInfo[moduleName].settings.length; i++) {
-            if (moduleInfo[moduleName].settings[i] && moduleInfo[moduleName].settings[i].checked) {
-                // radio
-                if (moduleInfo[moduleName].settings[i].type === "radio") {
-                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + moduleInfo[moduleName].settings[i].index + "_" + idNumber;
-                }
-                // checkbox
-                if (moduleInfo[moduleName].settings[i].type === "checkbox") {
-                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + idNumber;
-                }
-            }
-        }
-    }
-    state.footer = [newObj];
-    render();
-}
-
-function addLegal(toggle) {
-    if (toggle.checked) {
-        state["legal"] = ["legal"];
-    } else {
-        state["legal"] = [];
     }
     render();
 }

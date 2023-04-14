@@ -16,13 +16,13 @@
                 <div class="label">Header</div>
                 <div class="switch">
                     <span>
-                        <input id="switch-header-1" type="radio" name="switch-header" checked="checked" onclick="addHeader('header')">
+                        <input id="switch-header-1" type="radio" name="switch-header" checked="checked" onclick="addModule('header', 'header')">
                         <label for="switch-header-1">
                             header
                         </label>
                     </span>
                     <span>
-                        <input id="switch-header-2" type="radio" name="switch-header" onclick="addHeader('hero')">
+                        <input id="switch-header-2" type="radio" name="switch-header" onclick="addModule('hero', 'header')">
                         <label for="switch-header-2">
                             hero
                         </label>
@@ -37,21 +37,21 @@
             <div class="ui-row">
                 <div class="label">Modules</div>
                 <div class="button-group">
-                    <div class="button" onclick="addModule('dynamicHero')">Dynamic Hero +</div>
-                    <div class="button" onclick="addModule('imageProduct')">Image Product +</div>
-                    <div class="button" onclick="addModule('imageForm')">Image Form +</div>
-                    <div class="button" onclick="addModule('textForm')">Text Form +</div>
-                    <div class="button" onclick="addModule('spacer')">Spacer +</div>
-                    <div class="button" onclick="addModule('intro')">Intro +</div>
-                    <div class="button" onclick="addModule('statementA')">Statement A +</div>
-                    <div class="button" onclick="addModule('statementB')">Statement B +</div>
-                    <div class="button" onclick="addModule('cards')">Cards +</div>
-                    <div class="button" onclick="addModule('infographics')">Infographics +</div>
-                    <div class="button" onclick="addModule('article')">Article +</div>
-                    <div class="button" onclick="addModule('articleTwoColumn')">Article Two Column +</div>
-                    <div class="button" onclick="addModule('sideBySide')">Side By Side +</div>
-                    <div class="button" onclick="addModule('keyNumbers')">Key Numbers +</div>
-                    <div class="button" onclick="addModule('contactForm')">Contact Form +</div>
+                    <div class="button" onclick="addModule('dynamicHero', 'modules')">Dynamic Hero +</div>
+                    <div class="button" onclick="addModule('imageProduct', 'modules')">Image Product +</div>
+                    <div class="button" onclick="addModule('imageForm', 'modules')">Image Form +</div>
+                    <div class="button" onclick="addModule('textForm', 'modules')">Text Form +</div>
+                    <div class="button" onclick="addModule('spacer', 'modules')">Spacer +</div>
+                    <div class="button" onclick="addModule('intro', 'modules')">Intro +</div>
+                    <div class="button" onclick="addModule('statementA', 'modules')">Statement A +</div>
+                    <div class="button" onclick="addModule('statementB', 'modules')">Statement B +</div>
+                    <div class="button" onclick="addModule('cards', 'modules')">Cards +</div>
+                    <div class="button" onclick="addModule('infographics', 'modules')">Infographics +</div>
+                    <div class="button" onclick="addModule('article', 'modules')">Article +</div>
+                    <div class="button" onclick="addModule('articleTwoColumn', 'modules')">Article Two Column +</div>
+                    <div class="button" onclick="addModule('sideBySide', 'modules')">Side By Side +</div>
+                    <div class="button" onclick="addModule('keyNumbers', 'modules')">Key Numbers +</div>
+                    <div class="button" onclick="addModule('contactForm', 'modules')">Contact Form +</div>
                 </div>
             </div>
             <div class="ui-row">
@@ -64,25 +64,25 @@
                     <div class="label">Footers</div>
                     <div class="switch">
                         <span>
-                            <input id="switch-footer-1" type="radio" name="switch-footer" checked="checked" onclick="addFooter('footerENG')">
+                            <input id="switch-footer-1" type="radio" name="switch-footer" checked="checked" onclick="addModule('footerENG', 'footer')">
                             <label for="switch-footer-1">
                                 ENG
                             </label>
                         </span>
                         <span>
-                            <input id="switch-footer-2" type="radio" name="switch-footer" onclick="addFooter('footerFR')">
+                            <input id="switch-footer-2" type="radio" name="switch-footer" onclick="addModule('footerFR', 'footer')">
                             <label for="switch-footer-2">
                                 FR
                             </label>
                         </span>
                         <span>
-                            <input id="switch-footer-3" type="radio" name="switch-footer" onclick="addFooter('footerES')">
+                            <input id="switch-footer-3" type="radio" name="switch-footer" onclick="addModule('footerES', 'footer')">
                             <label for="switch-footer-3">
                                 ES
                             </label>
                         </span>
                         <span>
-                            <input id="switch-footer-4" type="radio" name="switch-footer" onclick="addFooter('footerPT')">
+                            <input id="switch-footer-4" type="radio" name="switch-footer" onclick="addModule('footerPT', 'footer')">
                             <label for="switch-footer-4">
                                 PT
                             </label>
@@ -92,7 +92,7 @@
                 <div class="ui-col">
                     <div class="label">Legal</div>
                     <div class="toggle">
-                        <input id="toggle-legal" type="checkbox" onclick="addLegal(this)">
+                        <input id="toggle-legal" type="checkbox" onclick="addModule('legal', 'legal', this)">
                         <label for="toggle-legal">
                             <span></span>
                         </label>
