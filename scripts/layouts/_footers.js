@@ -1,4 +1,4 @@
-export const footerENG = `<div class="module footer t-bg-color-blue">
+export const footerENG = `<div class="module footer [classList]">
     <div class="module__cell">
         <div class="module__cell-item footer__logo-area">
             <div class="footer__logo">
@@ -37,7 +37,7 @@ export const footerENG = `<div class="module footer t-bg-color-blue">
     </div>
 </div>`;
 
-export const footerFR = `<div class="module footer t-bg-color-blue">
+export const footerFR = `<div class="module footer [classList]">
     <div class="module__cell">
         <div class="module__cell-item footer__logo-area">
             <div class="footer__logo">
@@ -75,7 +75,7 @@ export const footerFR = `<div class="module footer t-bg-color-blue">
     </div>
 </div>`;
 
-export const footerES = `<div class="module footer t-bg-color-blue">
+export const footerES = `<div class="module footer [classList]">
     <div class="module__cell">
         <div class="module__cell-item footer__logo-area">
             <div class="footer__logo">
@@ -113,7 +113,7 @@ export const footerES = `<div class="module footer t-bg-color-blue">
     </div>
 </div>`;
 
-export const footerPT = `<div class="module footer t-bg-color-blue">
+export const footerPT = `<div class="module footer [classList]">
     <div class="module__cell">
         <div class="module__cell-item footer__logo-area">
             <div class="footer__logo">
@@ -152,7 +152,7 @@ export const footerPT = `<div class="module footer t-bg-color-blue">
     </div>
 </div>`;
 
-export const legal = `<div class="module legal t-bg-color-dark-blue">
+export const legal = `<div class="module legal [classList]">
     <div class="module__cell">
         <div class="module__cell-item legal__content">
             <div class="legal__text">

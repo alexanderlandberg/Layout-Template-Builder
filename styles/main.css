@@ -208,7 +208,7 @@ label.checkbox:hover {
   opacity: 0;
   margin-bottom: 16px;
 }
-.moduleList.dragList, .moduleList#header-module-list {
+.moduleList.dragList, .moduleList#header-module-list, .moduleList#footer-module-list {
   opacity: 1;
 }
 .moduleList.dragList li {

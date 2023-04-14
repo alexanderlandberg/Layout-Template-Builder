@@ -178,11 +178,30 @@ const moduleInfo = {
             "id": "checkbox-bg",
         }]
     },
+    "footerENG": {
+        "name": "Footer",
+        "settings": [{
+            "name": "Background Blue",
+            "class": "t-bg-color-blue",
+            "type": "checkbox",
+            "id": "checkbox-bg",
+            "checked": "checked",
+        }]
+    },
+    get footerFR() {
+        return this["footerENG"]
+    },
+    get footerES() {
+        return this["footerENG"]
+    },
+    get footerPT() {
+        return this["footerENG"]
+    },
 }
 const defaultState = {
     "header": [],
     "modules": [],
-    "footer": ["footerENG"],
+    "footer": [],
     "legal": [],
     "previewSize": "full",
     "previewZoom": "100",
@@ -193,7 +212,7 @@ const defaultState = {
 let state = {
     "header": [],
     "modules": [],
-    "footer": ["footer"],
+    "footer": [],
     "legal": [],
     "previewSize": "full",
     "previewZoom": "25",
@@ -215,6 +234,8 @@ async function render() {
     // update module list
     updateModuleList("header");
     updateModuleList("modules");
+    updateModuleList("footer");
+    updateModuleList("legal");
     handleDragList(document.querySelector("#main-module-list"));
 
     // build template
@@ -232,7 +253,7 @@ async function render() {
 
     // console.log(state.modules[state.modules.length - 1])
     // console.log(JSON.stringify(state.modules))
-    console.log("RENDER state header", state.header[0])
+    console.log(state.header)
 }
 
 async function buildTemplate() {
@@ -247,7 +268,7 @@ async function buildTemplate() {
     // header
     layoutModule = (state.header.length > 0 ? importHeaders[state.header[0].moduleName] : "")
     classArr = [];
-    if (state.header[0].settings) {
+    if (state.header[0] && state.header[0].settings) {
         for (let i = 0; i < Object.keys(state.header[0].settings).length; i++) {
             let settingsProp = Object.keys(state.header[0].settings)[i];
 
@@ -307,12 +328,41 @@ async function buildTemplate() {
     layoutTemplate = layoutTemplate.replace(regex, layoutMain);
 
     // footer
-    layoutFooter = (state.footer.length > 0 ? importFooters[state.footer] : "") + (state.legal.length > 0 ? importFooters[state.legal] : "");
-    regex = /\[currentYear\]/gi;
-    layoutFooter = layoutFooter.replace(regex, new Date().getFullYear());
+    layoutModule = (state.footer.length > 0 ? importFooters[state.footer[0].moduleName] : "")
+    classArr = [];
+    if (state.footer[0] && state.footer[0].settings) {
+        for (let i = 0; i < Object.keys(state.footer[0].settings).length; i++) {
+            let settingsProp = Object.keys(state.footer[0].settings)[i];
+
+            let settingsType = moduleInfo[state.footer[0].moduleName].settings.find(element => element.id === settingsProp).type;
+            let settingsValueIndex, settingState;
+            // if radio
+            if (settingsType === "radio") {
+                settingsValueIndex = state.footer[0].settings[settingsProp].split("_")[1];
+                settingState = moduleInfo[state.footer[0].moduleName].settings.find(element => (element.id === settingsProp && element.index === settingsValueIndex));
+            }
+            // if checkbox
+            if (settingsType === "checkbox") {
+                settingsValueIndex = state.footer[0].settings[settingsProp].split("_")[0];
+                settingState = moduleInfo[state.footer[0].moduleName].settings.find(element => element.id === settingsProp);
+            }
+            classArr.push(settingState.class);
+        }
+    }
+    regex = /\[classList\]/gi;
+    layoutModule = layoutModule.replace(regex, classArr.join(" "));
+    layoutFooter += layoutModule;
 
     regex = /\[htmlFooter\]/gi;
     layoutTemplate = layoutTemplate.replace(regex, layoutFooter);
+
+
+    // layoutFooter = (state.footer.length > 0 ? importFooters[state.footer] : "") + (state.legal.length > 0 ? importFooters[state.legal] : "");
+    // regex = /\[currentYear\]/gi;
+    // layoutFooter = layoutFooter.replace(regex, new Date().getFullYear());
+
+    // regex = /\[htmlFooter\]/gi;
+    // layoutTemplate = layoutTemplate.replace(regex, layoutFooter);
 }
 
 function resetTemplate() {
@@ -341,12 +391,14 @@ function updateModuleList(listGroup) {
         moduleList.innerHTML = "";
     } else if (listGroup === "header") {
         headerList.innerHTML = "";
+    } else if (listGroup === "footer") {
+        footerList.innerHTML = "";
     }
 
     for (let i = 0; i < state[listGroup].length; i++) {
         let newItem = document.createElement("li");
         newItem.setAttribute("data-moduleIdNumber", state[listGroup][i].moduleIdNumber);
-        if (state[listGroup][i].open) {
+        if (state[listGroup][i].open || listGroup !== "modules") {
             newItem.classList.add("open");
         }
         // list item
@@ -366,7 +418,7 @@ function updateModuleList(listGroup) {
         newClose.setAttribute("onclick", `removeModule(this), "${listGroup}"`);
 
         newListItem.appendChild(newModuleName);
-        if (moduleInfo[state[listGroup][i].moduleName].settings) {
+        if (moduleInfo[state[listGroup][i].moduleName].settings && listGroup === "modules") {
             newListItem.appendChild(newExpand);
         }
         if (listGroup === "modules") {
@@ -423,6 +475,8 @@ function updateModuleList(listGroup) {
             moduleList.appendChild(newItem);
         } else if (listGroup === "header") {
             headerList.appendChild(newItem);
+        } else if (listGroup === "footer") {
+            footerList.appendChild(newItem);
         }
     }
 }
@@ -603,9 +657,6 @@ function addHeader(moduleName) {
     }
     state.header = [newObj];
     render();
-    // state["header"] = [moduleName];
-    // render();
-    // console.log(state)
 }
 
 function addModule(moduleName) {
@@ -634,7 +685,27 @@ function addModule(moduleName) {
 }
 
 function addFooter(moduleName) {
-    state["footer"] = [moduleName];
+    let idNumber = makeId(6);
+    let newObj = {
+        "moduleName": moduleName,
+        "moduleIdNumber": idNumber,
+    }
+    if (moduleInfo[moduleName].settings) {
+        newObj.settings = {};
+        for (let i = 0; i < moduleInfo[moduleName].settings.length; i++) {
+            if (moduleInfo[moduleName].settings[i] && moduleInfo[moduleName].settings[i].checked) {
+                // radio
+                if (moduleInfo[moduleName].settings[i].type === "radio") {
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + moduleInfo[moduleName].settings[i].index + "_" + idNumber;
+                }
+                // checkbox
+                if (moduleInfo[moduleName].settings[i].type === "checkbox") {
+                    newObj.settings[moduleInfo[moduleName].settings[i].id] = moduleInfo[moduleName].settings[i].id + "_" + idNumber;
+                }
+            }
+        }
+    }
+    state.footer = [newObj];
     render();
 }
 
