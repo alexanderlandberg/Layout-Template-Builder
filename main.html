@@ -105,13 +105,16 @@
                 </ul>
             </div>
             <div class="ui-row">
-                <form id="downloadForm" onsubmit="downloadTemplate()">
+                <form id="downloadForm">
                     <div class="label">Output HTML</div>
                     <textarea id="fileText" name="htmlText" placeholder="HTML will be output here"></textarea>
                     <div class="label">Template Name</div>
                     <input type="text" name="templateName" value="" placeholder="Name of HTML file" oninput="updateTemplateName(this)">
                     <div class="button-group">
-                        <input class="button" type="submit" value="Download">
+                        <input class="button" type="submit" value="Download" onclick="downloadTemplate()">
+                        <input class="button" type="submit" value="Download for each language" onclick="downloadAllTemplates()">
+                    </div>
+                    <div class="button-group">
                         <div class="button alert" onclick="resetTemplate()">Reset Template</div>
                     </div>
                 </form>

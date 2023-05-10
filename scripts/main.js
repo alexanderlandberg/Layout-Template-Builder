@@ -3,6 +3,7 @@ window.addEventListener("load", init);
 
 // global variables
 let layoutTemplate = "";
+const footerLangs = ["footerENG", "footerFR", "footerES", "footerPT"];
 const btn = document.querySelector(".btn");
 const headerList = document.querySelector("#header-module-list");
 const moduleList = document.querySelector("#main-module-list");
@@ -209,9 +210,9 @@ const moduleInfo = {
     },
 }
 const defaultState = {
-    "header": [],
+    "header": [{ "moduleName": "header", "moduleIdNumber": "0tPIuI", "settings": { "checkbox-bg": "checkbox-bg_0tPIuI" } }],
     "modules": [],
-    "footer": [],
+    "footer": [{ "moduleName": "footerENG", "moduleIdNumber": "3gDLgb", "settings": { "checkbox-bg": "checkbox-bg_3gDLgb" } }],
     "legal": [],
     "previewSize": "full",
     "previewZoom": "100",
@@ -237,6 +238,7 @@ function init() {
     previewScale(state.previewZoom);
     downloadForm.addEventListener("submit", preventFormSubmit);
     render();
+    console.log(JSON.stringify(state.header))
 }
 
 async function render() {
@@ -260,10 +262,6 @@ async function render() {
 
     // set local storage
     setLocalStorage();
-
-    // console.log(state.modules[state.modules.length - 1])
-    // console.log(JSON.stringify(state.modules))
-    console.log(state.legal)
 }
 
 async function buildTemplate() {
@@ -675,6 +673,36 @@ function downloadTemplate() {
     document.body.removeChild(element);
 }
 
+function downloadAllTemplates() {
+    const currentFooter = state.footer[0].moduleName;
+
+    // loop through each footer
+    let i = 0;
+    function footerLoop() {
+        addModule(footerLangs[i], 'footer');
+        setTimeout(function () {
+
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(document.querySelector("#fileText").value));
+            element.setAttribute('download', (state.templateName + "-" + footerLangs[i].split("footer")[1] + ".html"));
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+
+            i++;
+            if (i < footerLangs.length) {
+                footerLoop();
+            }
+        }, 500)
+    }
+    footerLoop()
+
+    // reset current footer
+    setTimeout(function () {
+        addModule(currentFooter, 'footer');
+    }, (500 * (footerLangs.length + 1)))
+}
 function preventFormSubmit(event) {
     event.preventDefault();
 }
