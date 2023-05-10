@@ -13,6 +13,18 @@
     <div id="main">
         <div id="ui">
             <div class="ui-row">
+                <div class="label">Templates</div>
+                <div class="button-group">
+                    <select id="templateList" class="select" onchange="switchTemplate()"></select>
+                    <div class="button" onclick="addTemplate()">Add Template</div>
+
+                </div>
+            </div>
+            <div class="ui-row">
+                <div class="label">Template Name</div>
+                <input type="text" name="templateName" value="" placeholder="Name of HTML file" oninput="updateTemplateName(this)">
+            </div>
+            <div class="ui-row">
                 <div class="label">Header</div>
                 <div class="switch">
                     <span>
@@ -108,16 +120,19 @@
                 <form id="downloadForm">
                     <div class="label">Output HTML</div>
                     <textarea id="fileText" name="htmlText" placeholder="HTML will be output here"></textarea>
-                    <div class="label">Template Name</div>
-                    <input type="text" name="templateName" value="" placeholder="Name of HTML file" oninput="updateTemplateName(this)">
                     <div class="button-group">
                         <input class="button" type="submit" value="Download" onclick="downloadTemplate()">
                         <input class="button" type="submit" value="Download for each language" onclick="downloadAllTemplates()">
                     </div>
-                    <div class="button-group">
-                        <div class="button alert" onclick="resetTemplate()">Reset Template</div>
-                    </div>
                 </form>
+            </div>
+            <div class="ui-row">
+                <div class="label">Danger Zone (Double-click to trigger)</div>
+                <div class="button-group">
+                    <div class="button alert" ondblclick="resetTemplate()">Reset Template</div>
+                    <div id="btn-remove-template" class="button alert" ondblclick="removeTemplate()">Remove Template</div>
+                    <div class="button alert" ondblclick="clearLocalStorage()">Reset all</div>
+                </div>
             </div>
         </div>
         <div id="preview">

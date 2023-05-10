@@ -243,3 +243,9 @@
         }
     }
 }
+
+.select {
+    @include mix-button-styling;
+    outline: none;
+    flex-grow: 1;
+}

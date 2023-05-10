@@ -4,6 +4,7 @@ window.addEventListener("load", init);
 // global variables
 let layoutTemplate = "";
 const footerLangs = ["footerENG", "footerFR", "footerES", "footerPT"];
+const templateSelect = document.querySelector("#templateList");
 const btn = document.querySelector(".btn");
 const headerList = document.querySelector("#header-module-list");
 const moduleList = document.querySelector("#main-module-list");
@@ -210,38 +211,37 @@ const moduleInfo = {
     },
 }
 const defaultState = {
-    "header": [{ "moduleName": "header", "moduleIdNumber": "0tPIuI", "settings": { "checkbox-bg": "checkbox-bg_0tPIuI" } }],
-    "modules": [],
-    "footer": [{ "moduleName": "footerENG", "moduleIdNumber": "3gDLgb", "settings": { "checkbox-bg": "checkbox-bg_3gDLgb" } }],
-    "legal": [],
-    "previewSize": "full",
-    "previewZoom": "100",
-    "templateName": "template",
-}
-
-// state
-let state = {
     "header": [],
     "modules": [],
     "footer": [],
     "legal": [],
     "previewSize": "full",
-    "previewZoom": "25",
-    "templateName": "template",
+    "previewZoom": "100",
+    "templateName": "new template",
 }
+
+// template list
+let templateList = [];
+let currentTemplateIndex = 0;
+
+// state
+let state;
 
 // ---------- MAIN FUNCTIONS ----------
 
 function init() {
-    getLocaleStorage();
+    getLocalStorage();
+    initTemplate();
     previewSize(state.previewSize);
     previewScale(state.previewZoom);
     downloadForm.addEventListener("submit", preventFormSubmit);
     render();
-    console.log(JSON.stringify(state.header))
 }
 
 async function render() {
+
+    // set state from template
+    state = templateList[currentTemplateIndex];
 
     // update module list
     updateModuleList("header");
@@ -346,14 +346,78 @@ function resetTemplate() {
     render();
 }
 
+// ---------- LOCAL STORAGE ----------
+
 function setLocalStorage() {
-    localStorage.setItem("LayoutTemplateBuilderState", JSON.stringify(state))
+    localStorage.setItem("LayoutTemplateBuilderState", JSON.stringify(templateList))
 }
 
-function getLocaleStorage() {
+function getLocalStorage() {
     if (localStorage.getItem("LayoutTemplateBuilderState") !== null) {
-        state = JSON.parse(localStorage.getItem("LayoutTemplateBuilderState"));
+        templateList = JSON.parse(localStorage.getItem("LayoutTemplateBuilderState"));
     }
+}
+
+function clearLocalStorage() {
+    localStorage.removeItem("LayoutTemplateBuilderState");
+    location.reload();
+}
+
+// ---------- HANDLE TEMPLATES ----------
+
+function initTemplate() {
+    if (templateList.length === 0) {
+        addTemplate();
+    }
+    state = templateList[currentTemplateIndex];
+    sharedTemplateFunc();
+}
+
+function addTemplate() {
+    templateList.push(JSON.parse(JSON.stringify(defaultState)));
+    currentTemplateIndex = templateList.length - 1;
+    sharedTemplateFunc();
+}
+
+function removeTemplate() {
+    if (templateList.length > 1) {
+        templateList.splice(currentTemplateIndex, 1);
+        if (currentTemplateIndex > 0) {
+            currentTemplateIndex--;
+        } else {
+            currentTemplateIndex = 0;
+        }
+        sharedTemplateFunc();
+    }
+}
+
+function switchTemplate() {
+    currentTemplateIndex = (templateSelect.value - 1);
+    sharedTemplateFunc();
+}
+
+function sharedTemplateFunc() {
+    // set select options
+    templateSelect.innerHTML = "";
+    for (let i = 0; i < templateList.length; i++) {
+        let newOption = document.createElement("option");
+        newOption.setAttribute("value", i + 1);
+        newOption.innerHTML = `${i + 1}. <span>${templateList[i].templateName}</span>`;
+        if (i === currentTemplateIndex) {
+            newOption.setAttribute("selected", "selected");
+        }
+        templateSelect.appendChild(newOption);
+    }
+
+    // set button states
+    const btnRemove = document.querySelector("#btn-remove-template");
+    if (templateList.length < 2) {
+        btnRemove.classList.add("disabled");
+    } else {
+        btnRemove.classList.remove("disabled");
+    }
+
+    render();
 }
 
 // ---------- MODULE LIST ----------
@@ -656,7 +720,7 @@ function updateFile() {
 
 function updateTemplateName(target) {
     state.templateName = target.value.length > 0 ? target.value : "template";
-    console.log(state.templateName);
+    templateSelect.children[currentTemplateIndex].children[0].innerHTML = state.templateName;
     setLocalStorage();
 }
 

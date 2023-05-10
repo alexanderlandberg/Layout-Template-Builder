@@ -5,7 +5,7 @@
     margin-bottom: 8px;
 }
 
-.button {
+@mixin mix-button-styling {
     display: inline-block;
     padding: 8px 12px;
     font-size: 12px;
@@ -23,6 +23,10 @@
         color: $color-white;
         background-color: $color-ui-blue;
     }
+}
+
+.button {
+    @include mix-button-styling;
 
     &:active {
         background-color: $color-ui-blue-dark;
@@ -40,5 +44,6 @@
         border: 1px $color-darkgrey solid;
         color: $color-darkgrey;
         background: $color-lightgrey;
+        pointer-events: none;
     }
 }

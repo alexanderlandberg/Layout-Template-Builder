@@ -15,8 +15,15 @@ body {
 #main #ui {
   width: 440px;
   min-height: 100vh;
+  height: 100vh;
   padding: 20px;
   background: #EEEEEE;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+#main #ui::-webkit-scrollbar {
+  display: none;
 }
 #main #preview {
   width: calc(100% - 440px);
@@ -67,6 +74,7 @@ h4 {
   border: 1px #999999 solid;
   color: #999999;
   background: #EEEEEE;
+  pointer-events: none;
 }
 
 input[type=text],
@@ -408,6 +416,29 @@ label.checkbox:hover {
 }
 .toggle.disabled input:checked ~ label span {
   background-color: #EEEEEE;
+}
+
+.select {
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px #4199D4 solid;
+  color: #4199D4;
+  background: #FFFFFF;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0 8px 8px 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  outline: none;
+  flex-grow: 1;
+}
+.select:hover {
+  color: #FFFFFF;
+  background-color: #4199D4;
 }
 
 #preview-ui {

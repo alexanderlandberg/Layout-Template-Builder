@@ -14,8 +14,15 @@ body {
     #ui {
         width: 440px;
         min-height: 100vh;
+        height: 100vh;
         padding: 20px;
         background: $color-lightgrey;
+        overflow: scroll;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 
     #preview {
