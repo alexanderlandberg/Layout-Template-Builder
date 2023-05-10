@@ -284,6 +284,7 @@ async function buildTemplate() {
     // main
     for (let i = 0; i < state.modules.length; i++) {
         layoutModule = importModules[state.modules[i].moduleName]
+        layoutModule = addModuleIndex(layoutModule, i);
         layoutMain += addClassList(layoutModule, "modules", i);
     }
     regex = /\[htmlMain\]/gi;
@@ -332,6 +333,11 @@ async function buildTemplate() {
         return layoutModule;
     }
 
+    function addModuleIndex(layoutModule, index) {
+        let regex = /\[index\]/gi;
+        layoutModule = layoutModule.replace(regex, `_${index + 1}`);
+        return layoutModule;
+    }
 }
 
 function resetTemplate() {
