@@ -46,7 +46,7 @@ label.radio {
         cursor: pointer;
         display: none;
 
-        &:checked~.checkmark {
+        &:checked ~ .checkmark {
             background-color: $color-ui-blue;
 
             &:after {
@@ -103,7 +103,7 @@ label.checkbox {
         cursor: pointer;
         display: none;
 
-        &:checked~.checkmark {
+        &:checked ~ .checkmark {
             background-color: $color-ui-blue;
 
             &:after {
@@ -128,7 +128,7 @@ label.checkbox {
             top: 1px;
             width: 3px;
             height: 7px;
-            border: solid #FFFFFF;
+            border: solid $color-white;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }

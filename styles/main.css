@@ -1,4 +1,29 @@
 @import "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200";
+html {
+  --colorBlack: #000000;
+  --colorWhite: #ffffff;
+  --colorLightGrey: #eeeeee;
+  --colorGrey: #cccccc;
+  --colorDarkGrey: #999999;
+  --colorUiBlue: #4199d4;
+  --colorUiBlue20: rgba(65, 153, 212, 0.2);
+  --colorUiBlueDark: #2572a4;
+  --colorAlertRed: #ff6868;
+}
+@media (prefers-color-scheme: dark) {
+  html {
+    --colorBlack: #ffffff;
+    --colorWhite: #000000;
+    --colorLightGrey: #141414;
+    --colorGrey: #484848;
+    --colorDarkGrey: #cccccc;
+    --colorUiBlue: #4199d4;
+    --colorUiBlue20: rgba(65, 153, 212, 0.2);
+    --colorUiBlueDark: #2572a4;
+    --colorAlertRed: #ff6868;
+  }
+}
+
 * {
   font-family: "Proxima Nova", sans-serif;
   box-sizing: border-box;
@@ -17,7 +42,7 @@ body {
   min-height: 100vh;
   height: 100vh;
   padding: 20px;
-  background: #EEEEEE;
+  background: var(--colorLightGrey);
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -48,9 +73,9 @@ h4 {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  border: 1px #4199D4 solid;
-  color: #4199D4;
-  background: #FFFFFF;
+  border: 1px var(--colorUiBlue) solid;
+  color: var(--colorUiBlue);
+  background: var(--colorWhite);
   cursor: pointer;
   border-radius: 4px;
   margin: 0 8px 8px 0;
@@ -59,21 +84,21 @@ h4 {
           user-select: none;
 }
 .button:hover {
-  color: #FFFFFF;
-  background-color: #4199D4;
+  color: var(--colorWhite);
+  background-color: var(--colorUiBlue);
 }
 .button:active {
-  background-color: #2572a4;
+  background-color: var(--colorUiBlueDark);
 }
 .button.alert:hover {
-  color: #FFFFFF;
-  background-color: #ff6868;
-  border-color: #ff6868;
+  color: var(--colorWhite);
+  background-color: var(--colorAlertRed);
+  border-color: var(--colorAlertRed);
 }
 .button.disabled {
-  border: 1px #999999 solid;
-  color: #999999;
-  background: #EEEEEE;
+  border: 1px var(--colorDarkGrey) solid;
+  color: var(--colorDarkGrey);
+  background: var(--colorLightGrey);
   pointer-events: none;
 }
 
@@ -84,18 +109,18 @@ textarea {
   padding: 8px 12px;
   margin-bottom: 16px;
   font-weight: 400;
-  background-color: #FFFFFF;
-  color: #000000;
-  border: 0.0625rem solid #4199D4;
+  background-color: var(--colorWhite);
+  color: var(--colorBlack);
+  border: 0.0625rem solid var(--colorUiBlue);
   border-radius: 4px;
   -webkit-appearance: none;
   outline: none;
 }
 input[type=text].disabled,
 textarea.disabled {
-  background: #EEEEEE;
-  color: #999999;
-  border: 0.0625rem solid #999999;
+  background: var(--colorLightGrey);
+  color: var(--colorDarkGrey);
+  border: 0.0625rem solid var(--colorDarkGrey);
 }
 
 textarea {
@@ -112,7 +137,7 @@ label.radio {
   font-size: 12px;
   line-height: 16px;
   font-weight: 400;
-  color: #999999;
+  color: var(--colorDarkGrey);
   text-transform: initial;
   cursor: pointer;
   -webkit-user-select: none;
@@ -126,7 +151,7 @@ label.radio input {
   display: none;
 }
 label.radio input:checked ~ .checkmark {
-  background-color: #4199D4;
+  background-color: var(--colorUiBlue);
 }
 label.radio input:checked ~ .checkmark:after {
   display: block;
@@ -137,7 +162,7 @@ label.radio .checkmark {
   left: 0;
   height: 14px;
   width: 14px;
-  background-color: #EEEEEE;
+  background-color: var(--colorLightGrey);
   border-radius: 50%;
 }
 label.radio .checkmark:after {
@@ -149,10 +174,10 @@ label.radio .checkmark:after {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #FFFFFF;
+  background: var(--colorWhite);
 }
 label.radio:hover {
-  color: #CCCCCC;
+  color: var(--colorGrey);
 }
 
 label.checkbox {
@@ -163,7 +188,7 @@ label.checkbox {
   font-size: 12px;
   line-height: 16px;
   font-weight: 400;
-  color: #999999;
+  color: var(--colorDarkGrey);
   text-transform: initial;
   cursor: pointer;
   -webkit-user-select: none;
@@ -177,7 +202,7 @@ label.checkbox input {
   display: none;
 }
 label.checkbox input:checked ~ .checkmark {
-  background-color: #4199D4;
+  background-color: var(--colorUiBlue);
 }
 label.checkbox input:checked ~ .checkmark:after {
   display: block;
@@ -188,7 +213,7 @@ label.checkbox .checkmark {
   left: 0;
   height: 14px;
   width: 14px;
-  background-color: #EEEEEE;
+  background-color: var(--colorLightGrey);
 }
 label.checkbox .checkmark:after {
   content: "";
@@ -198,12 +223,12 @@ label.checkbox .checkmark:after {
   top: 1px;
   width: 3px;
   height: 7px;
-  border: solid #FFFFFF;
+  border: solid var(--colorWhite);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
 label.checkbox:hover {
-  color: #CCCCCC;
+  color: var(--colorGrey);
 }
 
 .moduleList {
@@ -211,8 +236,8 @@ label.checkbox:hover {
   padding: 0;
   margin: 0;
   border-radius: 4px;
-  background: white;
-  border: 1px #4199D4 solid;
+  background: var(--colorWhite);
+  border: 1px var(--colorUiBlue) solid;
   opacity: 0;
   margin-bottom: 16px;
 }
@@ -229,8 +254,8 @@ label.checkbox:hover {
   max-height: 30px;
   overflow: hidden;
   text-transform: uppercase;
-  color: #4199D4;
-  border-bottom: 1px solid #4199D4;
+  color: var(--colorUiBlue);
+  border-bottom: 1px solid var(--colorUiBlue);
   margin: 0 0 0px 0;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -245,7 +270,7 @@ label.checkbox:hover {
   opacity: 0.75;
 }
 .moduleList li.active {
-  background: #EEEEEE;
+  background: var(--colorLightGrey);
   opacity: 1;
 }
 .moduleList li.open {
@@ -297,7 +322,7 @@ label.checkbox:hover {
 }
 
 .label {
-  color: #000000;
+  color: var(--colorBlack);
   font-size: 12px;
   margin-bottom: 8px;
   -webkit-user-select: none;
@@ -310,18 +335,18 @@ label.checkbox:hover {
   padding-left: 10px;
   cursor: pointer;
   font-weight: 700;
-  color: #999999;
+  color: var(--colorDarkGrey);
 }
 .label .expand-all:hover,
 .label .collapse-all:hover {
-  color: #000000;
+  color: var(--colorBlack);
 }
 
 .switch {
-  border: 1px #4199D4 solid;
+  border: 1px var(--colorUiBlue) solid;
   border-radius: 6px;
   display: inline-flex;
-  background: #FFFFFF;
+  background: var(--colorWhite);
   margin: 0 16px 16px 0;
 }
 .switch > span {
@@ -333,7 +358,7 @@ label.checkbox:hover {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  color: #4199D4;
+  color: var(--colorUiBlue);
   cursor: pointer;
   border-radius: 4px;
   -webkit-user-select: none;
@@ -341,28 +366,28 @@ label.checkbox:hover {
           user-select: none;
 }
 .switch > span > label:hover {
-  background: rgba(65, 153, 212, 0.2);
+  background: var(--colorUiBlue20);
 }
 .switch > span > input:checked ~ label {
-  color: #FFFFFF;
-  background-color: #4199D4;
+  color: var(--colorWhite);
+  background-color: var(--colorUiBlue);
 }
 .switch input {
   display: none;
 }
 .switch.disabled {
-  border: 1px #999999 solid;
-  background: #EEEEEE;
+  border: 1px var(--colorDarkGrey) solid;
+  background: var(--colorLightGrey);
 }
 .switch.disabled > span > label {
-  color: #999999;
+  color: var(--colorDarkGrey);
 }
 .switch.disabled > span > label:hover {
-  background: #EEEEEE;
+  background: var(--colorLightGrey);
 }
 .switch.disabled > span > input:checked ~ label {
-  color: #FFFFFF;
-  background: #CCCCCC;
+  color: var(--colorWhite);
+  background: var(--colorGrey);
 }
 
 .toggle {
@@ -379,13 +404,13 @@ label.checkbox:hover {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  border: 1px #4199D4 solid;
+  border: 1px var(--colorUiBlue) solid;
   border-radius: 15px;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-  background: #FFFFFF;
+  background: var(--colorWhite);
 }
 .toggle span {
   position: absolute;
@@ -393,29 +418,29 @@ label.checkbox:hover {
   left: 3px;
   height: 22px;
   width: 22px;
-  background-color: #4199D4;
+  background-color: var(--colorUiBlue);
   display: block;
   border-radius: 50%;
 }
 .toggle input:checked ~ label {
-  background: #4199D4;
+  background: var(--colorUiBlue);
 }
 .toggle input:checked ~ label span {
-  background-color: #FFFFFF;
+  background-color: var(--colorWhite);
   left: 29px;
 }
 .toggle.disabled label {
-  border: 1px #999999 solid;
-  background: #EEEEEE;
+  border: 1px var(--colorDarkGrey) solid;
+  background: var(--colorLightGrey);
 }
 .toggle.disabled span {
-  background-color: #CCCCCC;
+  background-color: var(--colorGrey);
 }
 .toggle.disabled input:checked ~ label {
-  background: #CCCCCC;
+  background: var(--colorGrey);
 }
 .toggle.disabled input:checked ~ label span {
-  background-color: #EEEEEE;
+  background-color: var(--colorLightGrey);
 }
 
 .select {
@@ -424,9 +449,9 @@ label.checkbox:hover {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  border: 1px #4199D4 solid;
-  color: #4199D4;
-  background: #FFFFFF;
+  border: 1px var(--colorUiBlue) solid;
+  color: var(--colorUiBlue);
+  background: var(--colorWhite);
   cursor: pointer;
   border-radius: 4px;
   margin: 0 8px 8px 0;
@@ -437,13 +462,13 @@ label.checkbox:hover {
   flex-grow: 1;
 }
 .select:hover {
-  color: #FFFFFF;
-  background-color: #4199D4;
+  color: var(--colorWhite);
+  background-color: var(--colorUiBlue);
 }
 
 #preview-ui {
   padding: 20px;
-  background: #CCCCCC;
+  background: var(--colorGrey);
 }
 
 #iframe {

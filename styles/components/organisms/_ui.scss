@@ -3,8 +3,8 @@
     padding: 0;
     margin: 0;
     border-radius: 4px;
-    background: white;
-    border: 1px #4199D4 solid;
+    background: $color-white;
+    border: 1px $color-ui-blue solid;
     opacity: 0;
     margin-bottom: 16px;
 
@@ -23,8 +23,8 @@
         max-height: 30px;
         overflow: hidden;
         text-transform: uppercase;
-        color: #4199D4;
-        border-bottom: 1px solid #4199D4;
+        color: $color-ui-blue;
+        border-bottom: 1px solid $color-ui-blue;
         margin: 0 0 0px 0;
         user-select: none;
         transition: max-height .5s $easing;
@@ -146,7 +146,7 @@
             user-select: none;
 
             &:hover {
-                background: rgba($color-ui-blue, .2);
+                background: $color-ui-blue-20;
             }
         }
 

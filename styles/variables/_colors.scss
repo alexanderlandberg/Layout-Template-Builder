@@ -1,8 +1,32 @@
-$color-black: #000000;
-$color-white: #FFFFFF;
-$color-lightgrey: #EEEEEE;
-$color-grey: #CCCCCC;
-$color-darkgrey:#999999;
-$color-ui-blue: #4199D4;
-$color-ui-blue-dark: #2572a4;
-$color-alert-red: #ff6868;
+$color-black: var(--colorBlack);
+$color-white: var(--colorWhite);
+$color-lightgrey: var(--colorLightGrey);
+$color-grey: var(--colorGrey);
+$color-darkgrey: var(--colorDarkGrey);
+$color-ui-blue: var(--colorUiBlue);
+$color-ui-blue-20: var(--colorUiBlue20);
+$color-ui-blue-dark: var(--colorUiBlueDark);
+$color-alert-red: var(--colorAlertRed);
+
+html {
+    --colorBlack: #000000;
+    --colorWhite: #ffffff;
+    --colorLightGrey: #eeeeee;
+    --colorGrey: #cccccc;
+    --colorDarkGrey: #999999;
+    --colorUiBlue: #4199d4;
+    --colorUiBlue20: rgba(65, 153, 212, 0.2);
+    --colorUiBlueDark: #2572a4;
+    --colorAlertRed: #ff6868;
+    @media (prefers-color-scheme: dark) {
+        --colorBlack: #ffffff;
+        --colorWhite: #000000;
+        --colorLightGrey: #141414;
+        --colorGrey: #484848;
+        --colorDarkGrey: #cccccc;
+        --colorUiBlue: #4199d4;
+        --colorUiBlue20: rgba(65, 153, 212, 0.2);
+        --colorUiBlueDark: #2572a4;
+        --colorAlertRed: #ff6868;
+    }
+}
