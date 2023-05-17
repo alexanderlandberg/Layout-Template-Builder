@@ -1,9 +1,10 @@
 // Replace letters
-@function str-replace($string, $search, $replace: '') {
+@function str-replace($string, $search, $replace: "") {
     $index: str-index($string, $search);
 
     @if $index {
-        @return str-slice($string, 1, $index - 1)+$replace+str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+        @return str-slice($string, 1, $index - 1) + $replace +
+            str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
     }
 
     @return $string;
@@ -11,7 +12,8 @@
 
 // Encode symbols
 @function url-encode($string) {
-    $map: ("%": "%25",
+    $map: (
+        "%": "%25",
         "<": "%3C",
         ">": "%3E",
         " ": "%20",
@@ -33,13 +35,12 @@
         "?": "%3F",
         "#": "%23",
         "[": "%5B",
-        "]": "%5D"
-        );
+        "]": "%5D",
+    );
 
     $new: $string;
 
-    @each $search,
-    $replace in $map {
+    @each $search, $replace in $map {
         $new: str-replace($new, $search, $replace);
     }
 
@@ -48,5 +49,5 @@
 
 // Format the SVG as a URL
 @function inline-svg($string) {
-    @return url('data:image/svg+xml,#{url-encode($string)}');
+    @return url("data:image/svg+xml,#{url-encode($string)}");
 }

@@ -8,7 +8,9 @@
     opacity: 0;
     margin-bottom: 16px;
 
-    &.dragList, &#header-module-list, &#footer-module-list {
+    &.dragList,
+    &#header-module-list,
+    &#footer-module-list {
         opacity: 1;
     }
 
@@ -27,7 +29,7 @@
         border-bottom: 1px solid $color-ui-blue;
         margin: 0 0 0px 0;
         user-select: none;
-        transition: max-height .5s $easing;
+        transition: max-height 0.5s $easing;
 
         &:last-child {
             border: none;
@@ -35,7 +37,7 @@
         }
 
         &.hint {
-            opacity: .75;
+            opacity: 0.75;
         }
 
         &.active {
@@ -64,18 +66,17 @@
         .close::after,
         .expand::after {
             display: block;
-            font-family: 'Material Symbols Outlined';
+            font-family: "Material Symbols Outlined";
             font-size: 12px;
             line-height: 1;
             font-weight: 700;
             width: 12px;
             cursor: pointer;
-
         }
 
         .expand::after {
             content: "expand_more";
-            transition: transform .5s $easing;
+            transition: transform 0.5s $easing;
         }
 
         .close::after {
@@ -131,10 +132,10 @@
     background: $color-white;
     margin: 0 16px 16px 0;
 
-    &>span {
+    & > span {
         display: inline-block;
 
-        &>label {
+        & > label {
             display: inline-block;
             padding: 8px 12px;
             font-size: 12px;
@@ -150,7 +151,7 @@
             }
         }
 
-        &>input:checked~label {
+        & > input:checked ~ label {
             color: $color-white;
             background-color: $color-ui-blue;
         }
@@ -164,9 +165,8 @@
         border: 1px $color-darkgrey solid;
         background: $color-lightgrey;
 
-        &>span {
-
-            &>label {
+        & > span {
+            & > label {
                 color: $color-darkgrey;
 
                 &:hover {
@@ -174,7 +174,7 @@
                 }
             }
 
-            &>input:checked~label {
+            & > input:checked ~ label {
                 color: $color-white;
                 background: $color-grey;
             }
@@ -215,7 +215,7 @@
         border-radius: 50%;
     }
 
-    input:checked~label {
+    input:checked ~ label {
         background: $color-ui-blue;
 
         & span {
@@ -234,7 +234,7 @@
             background-color: $color-grey;
         }
 
-        input:checked~label {
+        input:checked ~ label {
             background: $color-grey;
 
             & span {

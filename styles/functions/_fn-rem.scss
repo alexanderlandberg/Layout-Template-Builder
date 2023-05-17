@@ -2,11 +2,10 @@
 
 @function rem($size) {
     $remSize: 0;
-    @if type-of($size) == 'number' and not unitless($size) {
+    @if type-of($size) == "number" and not unitless($size) {
         $remSize: math.div(math.div($size, ($size * 0 + 1)), 16);
-
-      } @else {
-          $remSize: math.div($size, 16);
+    } @else {
+        $remSize: math.div($size, 16);
     }
     @return #{$remSize}rem;
 }

@@ -498,7 +498,6 @@ iframe {
 }
 
 #iframe[data-scale="25"][data-size=full] iframe {
-  -ms-zoom: 0.25;
   zoom: 0.25;
   transform: scale(0.25);
   width: 400%;
@@ -506,7 +505,6 @@ iframe {
 }
 
 #iframe[data-scale="50"][data-size=full] iframe {
-  -ms-zoom: 0.5;
   zoom: 0.5;
   transform: scale(0.5);
   width: 200%;
@@ -514,7 +512,6 @@ iframe {
 }
 
 #iframe[data-scale="75"][data-size=full] iframe {
-  -ms-zoom: 0.75;
   zoom: 0.75;
   transform: scale(0.75);
   width: 133.33%;
