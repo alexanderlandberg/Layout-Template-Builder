@@ -5,7 +5,7 @@ window.addEventListener("load", init);
 let layoutTemplate = "";
 const footerLangs = ["footerENG", "footerFR", "footerES", "footerPT"];
 const templateSelect = document.querySelector("#templateList");
-const btn = document.querySelector(".btn");
+const darkmodeToggle = document.querySelector("#toggle-darkmode");
 const headerList = document.querySelector("#header-module-list");
 const moduleList = document.querySelector("#main-module-list");
 const footerList = document.querySelector("#footer-module-list");
@@ -236,6 +236,7 @@ function init() {
     previewScale(state.previewZoom);
     downloadForm.addEventListener("submit", preventFormSubmit);
     render();
+    initDarkmode();
 }
 
 async function render() {
@@ -825,4 +826,22 @@ function makeId(length) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+// ---------- MISC ----------
+
+function initDarkmode() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // dark mode
+        darkmodeToggle.checked = true;
+        setDarkmode();
+    }
+}
+
+function setDarkmode() {
+    if (darkmodeToggle.checked) {
+        document.body.classList.add("dark")
+    } else {
+        document.body.classList.remove("dark")
+    }
 }

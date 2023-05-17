@@ -8,7 +8,7 @@ $color-ui-blue-20: var(--colorUiBlue20);
 $color-ui-blue-dark: var(--colorUiBlueDark);
 $color-alert-red: var(--colorAlertRed);
 
-html {
+body {
     --colorBlack: #000000;
     --colorWhite: #ffffff;
     --colorLightGrey: #eeeeee;
@@ -18,7 +18,7 @@ html {
     --colorUiBlue20: rgba(65, 153, 212, 0.2);
     --colorUiBlueDark: #2572a4;
     --colorAlertRed: #ff6868;
-    @media (prefers-color-scheme: dark) {
+    &.dark {
         --colorBlack: #ffffff;
         --colorWhite: #000000;
         --colorLightGrey: #141414;

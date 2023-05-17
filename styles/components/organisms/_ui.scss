@@ -213,6 +213,7 @@
         background-color: $color-ui-blue;
         display: block;
         border-radius: 50%;
+        transition: all .2s $easing;
     }
 
     input:checked ~ label {

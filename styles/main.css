@@ -1,5 +1,5 @@
 @import "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200";
-html {
+body {
   --colorBlack: #000000;
   --colorWhite: #ffffff;
   --colorLightGrey: #eeeeee;
@@ -10,18 +10,16 @@ html {
   --colorUiBlueDark: #2572a4;
   --colorAlertRed: #ff6868;
 }
-@media (prefers-color-scheme: dark) {
-  html {
-    --colorBlack: #ffffff;
-    --colorWhite: #000000;
-    --colorLightGrey: #141414;
-    --colorGrey: #484848;
-    --colorDarkGrey: #cccccc;
-    --colorUiBlue: #4199d4;
-    --colorUiBlue20: rgba(65, 153, 212, 0.2);
-    --colorUiBlueDark: #2572a4;
-    --colorAlertRed: #ff6868;
-  }
+body.dark {
+  --colorBlack: #ffffff;
+  --colorWhite: #000000;
+  --colorLightGrey: #141414;
+  --colorGrey: #484848;
+  --colorDarkGrey: #cccccc;
+  --colorUiBlue: #4199d4;
+  --colorUiBlue20: rgba(65, 153, 212, 0.2);
+  --colorUiBlueDark: #2572a4;
+  --colorAlertRed: #ff6868;
 }
 
 * {
@@ -127,6 +125,31 @@ textarea {
   width: 100%;
   max-width: 100%;
   min-width: 100%;
+  overflow-x: hidden;
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+textarea::-webkit-resizer {
+  background: var(--colorUiBlue);
+}
+textarea::-webkit-scrollbar {
+  width: 10px;
+}
+textarea::-webkit-scrollbar-track {
+  background: var(--colorWhite);
+  border-radius: 4px;
+}
+textarea::-webkit-scrollbar-thumb {
+  background: var(--colorDarkGrey);
+  padding: 2px;
+  border: 2px solid var(--colorWhite);
+  border-radius: 4px;
+  height: 40%;
+}
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 label.radio {
@@ -421,6 +444,7 @@ label.checkbox:hover {
   background-color: var(--colorUiBlue);
   display: block;
   border-radius: 50%;
+  transition: all 0.2s ease;
 }
 .toggle input:checked ~ label {
   background: var(--colorUiBlue);
