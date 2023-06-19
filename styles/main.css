@@ -332,6 +332,12 @@ label.checkbox:hover {
 }
 .moduleList .settings {
   margin: 8px;
+  display: none;
+}
+.moduleList .open .settings,
+.moduleList .is-opening .settings,
+.moduleList .is-closing .settings {
+  display: block;
 }
 
 .ui-row::after {

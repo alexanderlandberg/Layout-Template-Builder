@@ -620,9 +620,17 @@ function expandModuleSettings(target, listGroup) {
     const foundItem = state[listGroup].find(element => element.moduleIdNumber === clickedIdNumber);
     if (!clickedItem.classList.contains("open")) {
         target.closest("li").classList.add("open");
+        target.closest("li").classList.add("is-opening");
+        setTimeout(() => {
+            target.closest("li").classList.remove("is-opening");
+        }, 500);
         foundItem.open = true;
     } else {
         target.closest("li").classList.remove("open");
+        target.closest("li").classList.add("is-closing");
+        setTimeout(() => {
+            target.closest("li").classList.remove("is-closing");
+        }, 500);
         foundItem.open = false;
     }
     setLocalStorage();
@@ -633,6 +641,10 @@ function expandAllSettings() {
         if (moduleInfo[state.modules[i].moduleName].settings) {
             state.modules[i].open = true;
             moduleList.children[i].classList.add("open");
+            moduleList.children[i].classList.add("is-opening");
+            setTimeout(() => {
+                moduleList.children[i].classList.remove("is-opening");
+            }, 500);
         }
     }
     setLocalStorage();
@@ -643,6 +655,10 @@ function collapseAllSettings() {
         if (moduleInfo[state.modules[i].moduleName].settings) {
             state.modules[i].open = false;
             moduleList.children[i].classList.remove("open");
+            moduleList.children[i].classList.add("is-closing");
+            setTimeout(() => {
+                moduleList.children[i].classList.remove("is-closing");
+            }, 500);
         }
     }
     setLocalStorage();

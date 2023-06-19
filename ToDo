@@ -1,6 +1,6 @@
 Prio Medium:
 - Add function to build UI
-- Fix drag preview image (when settings are collapsed)
 
 Prio Low:
 - Add confirmation promt to reset button
+- Update dropdown design

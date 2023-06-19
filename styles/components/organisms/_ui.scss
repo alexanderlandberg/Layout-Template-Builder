@@ -90,6 +90,12 @@
 
     .settings {
         margin: 8px;
+        display: none;
+    }
+    .open .settings,
+    .is-opening .settings,
+    .is-closing .settings{
+        display: block;
     }
 }
 
