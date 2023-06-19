@@ -14,7 +14,7 @@ const moduleInfo = {
     "hero": {
         "name": "Hero",
         "settings": [{
-            "name": "Background Blue",
+            "name": "BG Blue",
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -24,7 +24,7 @@ const moduleInfo = {
     "header": {
         "name": "Header",
         "settings": [{
-            "name": "Background Blue",
+            "name": "BG Blue",
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -34,7 +34,7 @@ const moduleInfo = {
     "dynamicHero": {
         "name": "Dynamic Hero",
         "settings": [{
-            "name": "Background Blue",
+            "name": "BG Blue",
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -49,7 +49,7 @@ const moduleInfo = {
     "imageProduct": {
         "name": "Image Product",
         "settings": [{
-            "name": "Background Blue",
+            "name": "BG Blue",
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -64,7 +64,7 @@ const moduleInfo = {
     "imageForm": {
         "name": "Image Form",
         "settings": [{
-            "name": "Background Blue",
+            "name": "BG Blue",
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -79,7 +79,7 @@ const moduleInfo = {
     "textForm": {
         "name": "Text Form",
         "settings": [{
-            "name": "Background Blue",
+            "name": "BG Blue",
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -94,33 +94,38 @@ const moduleInfo = {
     "spacer": {
         "name": "Spacer",
         "settings": [{
-            "name": "Spacer Small",
+            "label": "Spacer size",
+            "name": "Small",
             "class": "spacer__small",
             "type": "radio",
             "id": "radio-size",
             "index": "1",
             "checked": "checked",
         }, {
-            "name": "Spacer Large",
+            "label": "Spacer size",
+            "name": "Large",
             "class": "spacer__large",
             "type": "radio",
             "id": "radio-size",
             "index": "2",
         }, {
-            "name": "Background Default",
+            "label": "Background color",
+            "name": "White (Default)",
             "class": "",
             "type": "radio",
             "id": "radio-bg",
             "index": "1",
             "checked": "checked",
         }, {
-            "name": "Background Grey",
+            "label": "Background color",
+            "name": "Grey",
             "class": "t-bg-color-grey",
             "type": "radio",
             "id": "radio-bg",
             "index": "2",
         }, {
-            "name": "Background Blue",
+            "label": "Background color",
+            "name": "Blue",
             "class": "t-bg-color-blue",
             "type": "radio",
             "id": "radio-bg",
@@ -139,7 +144,7 @@ const moduleInfo = {
     "cards": {
         "name": "Cards",
         "settings": [{
-            "name": "Background Grey",
+            "name": "BG Grey",
             "class": "t-bg-color-grey",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -157,7 +162,7 @@ const moduleInfo = {
     "sideBySide": {
         "name": "Side By Side",
         "settings": [{
-            "name": "Background Blue",
+            "name": "BG Blue",
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -174,7 +179,7 @@ const moduleInfo = {
     "contactForm": {
         "name": "Contact Form",
         "settings": [{
-            "name": "Background Grey",
+            "name": "BG Grey",
             "class": "t-bg-color-grey",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -183,7 +188,7 @@ const moduleInfo = {
     "footerENG": {
         "name": "Footer",
         "settings": [{
-            "name": "Background Blue",
+            "name": "BG Blue",
             "class": "t-bg-color-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -193,7 +198,7 @@ const moduleInfo = {
     "legal": {
         "name": "Legal",
         "settings": [{
-            "name": "Background Dark Blue",
+            "name": "BG Dark Blue",
             "class": "t-bg-color-dark-blue",
             "type": "checkbox",
             "id": "checkbox-bg",
@@ -431,8 +436,25 @@ function updateModuleList(listGroup) {
         headerList.innerHTML = "";
     } else if (listGroup === "footer") {
         footerList.innerHTML = "";
-    } else if (listGroup === "legal") {
-        // legal
+    }
+
+    // add "empty" class if list is empty
+    if (state[listGroup].length === 0) {
+        if (listGroup === "modules") {
+            moduleList.closest(".ui-row").classList.add("empty")
+        } else if (listGroup === "header") {
+            headerList.closest(".ui-row").classList.add("empty")
+        } else if (listGroup === "footer") {
+            footerList.closest(".ui-row").classList.add("empty")
+        }
+    } else {
+        if (listGroup === "modules") {
+            moduleList.closest(".ui-row").classList.remove("empty")
+        } else if (listGroup === "header") {
+            headerList.closest(".ui-row").classList.remove("empty")
+        } else if (listGroup === "footer" || listGroup === "legal") {
+            footerList.closest(".ui-row").classList.remove("empty")
+        }
     }
 
     for (let i = 0; i < state[listGroup].length; i++) {
@@ -471,6 +493,7 @@ function updateModuleList(listGroup) {
             let newSettings = document.createElement("div");
             newSettings.classList.add("settings");
 
+            let newRadioGroup;
             let settingsArr = moduleInfo[state[listGroup][i].moduleName].settings;
             for (let j = 0; j < settingsArr.length; j++) {
 
@@ -488,6 +511,19 @@ function updateModuleList(listGroup) {
                     newInput.name = settingsArr[j].id + "_" + state[listGroup][i].moduleIdNumber;
                     newInput.id = settingsArr[j].id + "_" + settingsArr[j].index + "_" + state[listGroup][i].moduleIdNumber;
                     newLabel.classList.add("radio");
+
+                    // radio group
+                    if (newSettings.querySelector(`[tempId=${settingsArr[j].id}]`) === null) {
+                        newRadioGroup = document.createElement("div");
+                        newRadioGroup.classList.add("radio-group");
+                        newRadioGroup.setAttribute("tempId", settingsArr[j].id);
+                        let newRadioGroupLabel = document.createElement("div");
+                        newRadioGroupLabel.innerHTML = settingsArr[j].label + ":";
+                        newRadioGroupLabel.classList.add("radio-group-label");
+                        newRadioGroup.appendChild(newRadioGroupLabel);
+                    } else {
+                        newRadioGroup = newSettings.querySelector(`[tempId=${settingsArr[j].id}]`);
+                    }
                 }
 
                 // checkbox
@@ -507,7 +543,16 @@ function updateModuleList(listGroup) {
 
                 newLabel.appendChild(newInput);
                 newLabel.appendChild(newSpan);
-                newSettings.appendChild(newLabel);
+                if (settingsArr[j]["type"] === "radio") {
+                    newRadioGroup.appendChild(newLabel);
+                    newSettings.appendChild(newRadioGroup);
+                } else {
+                    newSettings.appendChild(newLabel);
+                }
+            }
+            // clean up radio group
+            for (let j = 0; j < newSettings.querySelectorAll(".radio-group").length; j++) {
+                newSettings.querySelectorAll(".radio-group")[j].removeAttribute("tempId");
             }
             newItem.appendChild(newSettings);
         }

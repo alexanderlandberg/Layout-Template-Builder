@@ -5,14 +5,8 @@
     border-radius: 4px;
     background: $color-white;
     border: 1px $color-ui-blue solid;
-    opacity: 0;
+    opacity: 1;
     margin-bottom: 16px;
-
-    &.dragList,
-    &#header-module-list,
-    &#footer-module-list {
-        opacity: 1;
-    }
 
     &.dragList li {
         cursor: move;
@@ -104,6 +98,9 @@
         content: "";
         display: block;
         clear: both;
+    }
+    &.empty{
+        display: none;
     }
 }
 

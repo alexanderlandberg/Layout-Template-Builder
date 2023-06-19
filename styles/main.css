@@ -155,11 +155,26 @@ textarea::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
+.radio-group {
+  display: flex;
+  gap: 2px 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.radio-group-label {
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 400;
+  color: var(--colorDarkGrey);
+  text-transform: initial;
+  width: 100%;
+}
+
 label.radio {
   display: block;
   position: relative;
   padding-left: 20px;
-  margin-bottom: 6px;
   font-size: 12px;
   line-height: 16px;
   font-weight: 400;
@@ -264,11 +279,8 @@ label.checkbox:hover {
   border-radius: 4px;
   background: var(--colorWhite);
   border: 1px var(--colorUiBlue) solid;
-  opacity: 0;
-  margin-bottom: 16px;
-}
-.moduleList.dragList, .moduleList#header-module-list, .moduleList#footer-module-list {
   opacity: 1;
+  margin-bottom: 16px;
 }
 .moduleList.dragList li {
   cursor: move;
@@ -347,6 +359,9 @@ label.checkbox:hover {
   content: "";
   display: block;
   clear: both;
+}
+.ui-row.empty {
+  display: none;
 }
 
 .ui-col {
