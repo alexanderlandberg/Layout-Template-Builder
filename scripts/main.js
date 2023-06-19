@@ -831,17 +831,25 @@ function makeId(length) {
 // ---------- MISC ----------
 
 function initDarkmode() {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // dark mode
-        darkmodeToggle.checked = true;
-        setDarkmode();
+    if (state.darkmode === undefined) {
+        // check system prefers-color-scheme
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            state.darkmode = true;
+        } else {
+            state.darkmode = false;
+        }
     }
+    darkmodeToggle.checked = state.darkmode;
+    setDarkmode();
 }
 
 function setDarkmode() {
     if (darkmodeToggle.checked) {
         document.body.classList.add("dark")
+        state.darkmode = true;
     } else {
         document.body.classList.remove("dark")
+        state.darkmode = false;
     }
+    setLocalStorage();
 }
