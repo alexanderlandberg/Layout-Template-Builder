@@ -255,4 +255,10 @@
     @include mix-button-styling;
     outline: none;
     flex-grow: 1;
+
+    border: none;
+    border-right: 8px solid transparent;
+    outline: 1px $color-ui-blue solid;
+    margin: 1px 8px 8px 1px;
+    padding: 7px 8px;
 }

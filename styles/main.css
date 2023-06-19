@@ -81,6 +81,9 @@ h4 {
      -moz-user-select: none;
           user-select: none;
 }
+.button:last-child {
+  margin-right: 0;
+}
 .button:hover {
   color: var(--colorWhite);
   background-color: var(--colorUiBlue);
@@ -490,6 +493,14 @@ label.checkbox:hover {
           user-select: none;
   outline: none;
   flex-grow: 1;
+  border: none;
+  border-right: 8px solid transparent;
+  outline: 1px var(--colorUiBlue) solid;
+  margin: 1px 8px 8px 1px;
+  padding: 7px 8px;
+}
+.select:last-child {
+  margin-right: 0;
 }
 .select:hover {
   color: var(--colorWhite);

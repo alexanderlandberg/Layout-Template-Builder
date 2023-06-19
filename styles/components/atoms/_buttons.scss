@@ -17,6 +17,9 @@
     cursor: pointer;
     border-radius: 4px;
     margin: 0 8px 8px 0;
+    &:last-child{
+        margin-right: 0;
+    }
     user-select: none;
 
     &:hover {
