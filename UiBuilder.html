@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+
+<body>
+
+    <div id="main">
+        <div id="ui"></div>
+    </div>
+
+    <script type="text/javascript">
+        function htmlToElement(html) {
+            var template = document.createElement('template');
+            html = html.trim(); // Never return a text node of whitespace as the result
+            template.innerHTML = html;
+            return template.content.firstChild;
+        }
+
+        function buildUi() {
+            loopUiLayout(uiLayout);
+        }
+
+        function loopUiLayout(uiObj, isInsideLoop) {
+            let loopHtml;
+            let returnedLoopHtml;
+            if (isInsideLoop) {
+                loopHtml = document.createElement("div");
+                loopHtml.classList.add("switch");
+                console.log("------------- START LOOP -------------");
+            }
+
+            let newUi = document.createElement("div");
+            newUi.id = "ui";
+            for (let i = 0; i < uiObj.length; i++) {
+                if (isInsideLoop) {
+                    console.log("----- NEW LOOP ROW -----");
+                } else {
+                    console.log("----------------------------- NEW ROW -----------------------------");
+                }
+                let rowObj = uiObj[i];
+                let newRow = htmlToElement(rowObj.template);
+                for (let j = 0; j < Object.keys(rowObj).length; j++) {
+                    let newKey = Object.keys(rowObj)[j];
+                    // add classes to the row
+                    if (newKey === "templateClassList") {
+                        for (let l = 0; l < rowObj[newKey].length; l++) {
+                            console.log(newRow, rowObj[newKey][l])
+                            newRow.classList.add(rowObj[newKey][l]);
+                        }
+                    }
+                    // add innerHTML/attributes to the row items
+                    let newItem = newRow.querySelector(`[obj=${newKey}]`);
+                    if (newKey === "loop") {
+                        // if property is "loop", replace the item with looped html
+                        newItem.replaceWith(loopUiLayout(rowObj[newKey], true));
+                    } else if (newKey !== "template" && newKey !== "templateClassList") {
+                        // add innerHTML/attributes to the row items
+                        for (let k = 0; k < Object.keys(rowObj[newKey]).length; k++) {
+                            let newKeyofKey = Object.keys(rowObj[newKey])[k];
+                            console.log(newKeyofKey, "=", rowObj[newKey][newKeyofKey]);
+                            if (newKeyofKey === "innerHTML") {
+                                newItem.innerHTML = rowObj[newKey][newKeyofKey];
+                            } else {
+                                newItem.setAttribute(newKeyofKey, rowObj[newKey][newKeyofKey]);
+                            }
+                        }
+                    }
+                }
+                if (!isInsideLoop) {
+                    newUi.innerHTML += newRow.outerHTML;
+                } else {
+                    loopHtml.innerHTML += newRow.outerHTML;
+                }
+            }
+            // console.log(newUi)
+
+            if (isInsideLoop) {
+                console.log("------------- END LOOP -------------");
+                return loopHtml;
+            }
+            if (!isInsideLoop) {
+                console.log("------------------------------- END -------------------------------");
+                document.querySelector("#ui").replaceWith(newUi);
+            }
+        }
+
+        const dropdownButton = `<div class="ui-row">
+            <div obj="label" class="label"></div>
+            <div class="button-group">
+                <select obj="select" class="select"></select>
+                <div obj="button" class="button"></div>
+            </div>
+        </div>`;
+
+        const textInput = `<div class="ui-row">
+            <div obj="label" class="label"></div>
+            <input obj="input" type="text">
+        </div>`;
+
+        const toggleSwitch = `<div class="ui-row">
+            <div obj="label" class="label"></div>
+            <div obj="loop" class="switch">
+            </div>
+        </div>`;
+        const toggleSwitchLoop = `<span>
+            <input obj="input" type="radio">
+            <label obj="label"></label>
+        </span>`
+
+        const moduleList = `<div class="ui-row">
+            <div obj="label" class="label">Header List</div>
+            <ul obj="ul" id="header-module-list" class="moduleList"></ul>
+        </div>`;
+
+        const uiLayout = [
+            {
+                "template": dropdownButton,
+                "label": {
+                    "innerHTML": "Templates",
+                },
+                "select": {
+                    "id": "templateList",
+                    "onchange": "switchTemplate()"
+                },
+                "button": {
+                    "innerHTML": "Add Template",
+                    "onclick": "addTemplate()",
+                }
+            },
+            {
+                "template": textInput,
+                "label": {
+                    "innerHTML": "Template Name",
+                },
+                "input": {
+                    "name": "templateName",
+                    "value": "",
+                    "placeholder": "Name of HTML file",
+                    "oninput": "updateTemplateName(this)",
+                }
+            },
+            {
+                "template": toggleSwitch,
+                "label": {
+                    "innerHTML": "Header",
+                },
+                "loop": [
+                    {
+                        "template": toggleSwitchLoop,
+                        "label": {
+                            "innerHTML": "header",
+                            "for": "switch-header-1",
+                        },
+                        "input": {
+                            "id": "switch-header-1",
+                            "name": "switch-header",
+                            "onclick": "addModule('header', 'header')",
+                        }
+                    },
+                    {
+                        "template": toggleSwitchLoop,
+                        "label": {
+                            "innerHTML": "hero",
+                            "for": "switch-header-2",
+                        },
+                        "input": {
+                            "id": "switch-header-2",
+                            "name": "switch-header",
+                            "onclick": "addModule('hero', 'header')",
+                        }
+                    }
+                ]
+            },
+            {
+                "template": moduleList,
+                "templateClassList": ["empty", "alex"],
+                "label": {
+                    "innerHTML": "Header List",
+                },
+                "ul": {
+                    "id": "header-module-list",
+                }
+            },
+        ];
+
+        buildUi();
+    </script>
+</body>
+
+</html>
