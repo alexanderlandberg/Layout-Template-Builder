@@ -4,12 +4,9 @@ window.addEventListener("load", init);
 // global variables
 let layoutTemplate = "";
 const footerLangs = ["footerENG", "footerFR", "footerES", "footerPT"];
-const templateSelect = document.querySelector("#templateList");
-const darkmodeToggle = document.querySelector("#toggle-darkmode");
-const headerList = document.querySelector("#header-module-list");
-const moduleList = document.querySelector("#main-module-list");
-const footerList = document.querySelector("#footer-module-list");
-const downloadForm = document.querySelector("#downloadForm");
+// query selectors
+let templateSelect, darkmodeToggle, headerList, moduleList, footerList, downloadForm;
+// module info
 const moduleInfo = {
     "hero": {
         "name": "Hero",
@@ -215,6 +212,7 @@ const moduleInfo = {
         return this["footerENG"]
     },
 }
+// default state
 const defaultState = {
     "header": [],
     "modules": [],
@@ -234,8 +232,20 @@ let state;
 
 // ---------- MAIN FUNCTIONS ----------
 
-function init() {
+async function init() {
     getLocalStorage();
+
+    const uiLayout = await getUiLayout();
+    buildUiLayout(uiLayout);
+
+    // reinitate query selectors
+    templateSelect = document.querySelector("#templateList");
+    darkmodeToggle = document.querySelector("#toggle-darkmode");
+    headerList = document.querySelector("#header-module-list");
+    moduleList = document.querySelector("#main-module-list");
+    footerList = document.querySelector("#footer-module-list");
+    downloadForm = document.querySelector("#downloadForm");
+
     initTemplate();
     previewSize(state.previewSize);
     previewScale(state.previewZoom);
@@ -877,6 +887,381 @@ function previewScale(scale) {
     setLocalStorage();
 }
 
+// ---------- BUILD UI ----------
+
+async function getUiLayout() {
+
+    let importUiComponents = await import("./layouts/_ui-components.js");
+
+    const uiLayout = [
+        {
+            "template": importUiComponents.uiDropdownButton,
+            "label": {
+                "innerHTML": "Templates",
+            },
+            "select": {
+                "id": "templateList",
+                "onchange": "switchTemplate()"
+            },
+            "button": {
+                "innerHTML": "Add Template",
+                "onclick": "addTemplate()",
+            }
+        },
+        {
+            "template": importUiComponents.uiTextInput,
+            "label": {
+                "innerHTML": "Template Name",
+            },
+            "input": {
+                "name": "templateName",
+                "value": "",
+                "placeholder": "Name of HTML file",
+                "oninput": "updateTemplateName(this)",
+            }
+        },
+        {
+            "template": importUiComponents.uiToggleSwitch,
+            "label": {
+                "innerHTML": "Header",
+            },
+            "loop": [
+                {
+                    "template": importUiComponents.uiToggleSwitchLoop,
+                    "label": {
+                        "innerHTML": "header",
+                        "for": "switch-header-1",
+                    },
+                    "input": {
+                        "id": "switch-header-1",
+                        "name": "switch-header",
+                        "onclick": "addModule('header', 'header')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiToggleSwitchLoop,
+                    "label": {
+                        "innerHTML": "hero",
+                        "for": "switch-header-2",
+                    },
+                    "input": {
+                        "id": "switch-header-2",
+                        "name": "switch-header",
+                        "onclick": "addModule('hero', 'header')",
+                    }
+                }
+            ]
+        },
+        {
+            "template": importUiComponents.uiModuleList,
+            "templateClassList": [],
+            "label": {
+                "innerHTML": "Header List",
+            },
+            "ul": {
+                "id": "header-module-list",
+            }
+        },
+        {
+            "template": importUiComponents.uiButtonGroup,
+            "label": {
+                "innerHTML": "Modules",
+            },
+            "loop": [
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Dynamic Hero +",
+                        "onclick": "addModule('dynamicHero', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Image Product +",
+                        "onclick": "addModule('imageProduct', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Image Form +",
+                        "onclick": "addModule('imageForm', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Text Form +",
+                        "onclick": "addModule('textForm', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Spacer +",
+                        "onclick": "addModule('spacer', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Intro +",
+                        "onclick": "addModule('intro', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Statement A +",
+                        "onclick": "addModule('statementA', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Statement B +",
+                        "onclick": "addModule('statementB', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Cards +",
+                        "onclick": "addModule('cards', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Infographics +",
+                        "onclick": "addModule('infographics', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Article +",
+                        "onclick": "addModule('article', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Article Two Column +",
+                        "onclick": "addModule('articleTwoColumn', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Side By Side +",
+                        "onclick": "addModule('sideBySide', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Key Numbers +",
+                        "onclick": "addModule('keyNumbers', 'modules')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Contact Form +",
+                        "onclick": "addModule('contactForm', 'modules')",
+                    }
+                },
+            ]
+        },
+        {
+            "template": importUiComponents.uiModuleList,
+            "templateClassList": [],
+            "label": {
+                "innerHTML": `Module List <span class="collapse-all" onclick="collapseAllSettings()">Collapse All</span><span class="expand-all" onclick="expandAllSettings()">Expand All</span>`,
+            },
+            "ul": {
+                "id": "main-module-list",
+            }
+        },
+        {
+            "template": importUiComponents.uiToggleSwitch,
+            "label": {
+                "innerHTML": "Footers",
+            },
+            "loop": [
+                {
+                    "template": importUiComponents.uiToggleSwitchLoop,
+                    "label": {
+                        "innerHTML": "ENG",
+                        "for": "switch-footer-1",
+                    },
+                    "input": {
+                        "id": "switch-footer-1",
+                        "name": "switch-footer",
+                        "onclick": "addModule('footerENG', 'footer')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiToggleSwitchLoop,
+                    "label": {
+                        "innerHTML": "FR",
+                        "for": "switch-footer-2",
+                    },
+                    "input": {
+                        "id": "switch-footer-2",
+                        "name": "switch-footer",
+                        "onclick": "addModule('footerFR', 'footer')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiToggleSwitchLoop,
+                    "label": {
+                        "innerHTML": "ES",
+                        "for": "switch-footer-3",
+                    },
+                    "input": {
+                        "id": "switch-footer-3",
+                        "name": "switch-footer",
+                        "onclick": "addModule('footerES', 'footer')",
+                    }
+                },
+                {
+                    "template": importUiComponents.uiToggleSwitchLoop,
+                    "label": {
+                        "innerHTML": "PT",
+                        "for": "switch-footer-4",
+                    },
+                    "input": {
+                        "id": "switch-footer-4",
+                        "name": "switch-footer",
+                        "onclick": "addModule('footerPT', 'footer')",
+                    }
+                },
+            ]
+        },
+        {
+            "template": importUiComponents.uiToggle,
+            "label": {
+                "innerHTML": "Legal",
+            },
+            "input": {
+                "id": "toggle-legal",
+                "onclick": "addModule('legal', 'legal', this)",
+            },
+            "toggleLabel": {
+                "for": "toggle-legal",
+            }
+        },
+        {
+            "template": importUiComponents.uiModuleList,
+            "templateClassList": [],
+            "label": {
+                "innerHTML": `Footer List`,
+            },
+            "ul": {
+                "id": "footer-module-list",
+            }
+        },
+        {
+            "template": importUiComponents.uiDownloadForm,
+        },
+        {
+            "template": importUiComponents.uiButtonGroup,
+            "label": {
+                "innerHTML": "Danger Zone (Double-click to trigger)",
+            },
+            "loop": [
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Reset Template",
+                        "ondblclick": "resetTemplate()",
+                        "class": ["alert"],
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "id": "btn-remove-template",
+                        "innerHTML": "Remove Template",
+                        "ondblclick": "removeTemplate()",
+                        "class": ["alert"],
+                    }
+                },
+                {
+                    "template": importUiComponents.uiButtonGroupLoop,
+                    "button": {
+                        "innerHTML": "Reset all",
+                        "ondblclick": "clearLocalStorage()",
+                        "class": ["alert"],
+                    }
+                },
+            ]
+        },
+    ];
+    return uiLayout;
+}
+
+function buildUiLayout(uiObj, isInsideLoop) {
+    let loopHtml;
+    if (isInsideLoop) {
+        loopHtml = document.createElement("div");
+    }
+
+    let newUi = document.createElement("div");
+    newUi.id = "ui";
+    for (let i = 0; i < uiObj.length; i++) {
+        let rowObj = uiObj[i];
+        let newRow = htmlToElement(rowObj.template);
+        for (let j = 0; j < Object.keys(rowObj).length; j++) {
+            let newKey = Object.keys(rowObj)[j];
+            // add classes to the row
+            if (newKey === "templateClassList") {
+                for (let l = 0; l < rowObj[newKey].length; l++) {
+                    newRow.classList.add(rowObj[newKey][l]);
+                }
+            }
+            // add innerHTML/attributes to the row items
+            let newItem = newRow.querySelector(`[obj=${newKey}]`);
+            if (newRow.hasAttribute("obj")) {
+                newItem = newRow;
+            }
+            if (newKey === "loop") {
+                // if property is "loop", replace the item with looped html
+                let loopedUiLayout = buildUiLayout(rowObj[newKey], true);
+                loopedUiLayout.setAttribute("class", newItem.getAttribute("class"));
+                newItem.replaceWith(loopedUiLayout);
+            } else if (newKey !== "template" && newKey !== "templateClassList") {
+                // add innerHTML/attributes to the row items
+                for (let k = 0; k < Object.keys(rowObj[newKey]).length; k++) {
+                    let newKeyofKey = Object.keys(rowObj[newKey])[k];
+                    if (newKeyofKey === "innerHTML") {
+                        newItem.innerHTML = rowObj[newKey][newKeyofKey];
+                    } else if (newKeyofKey === "class") {
+                        newItem.classList.add(...rowObj[newKey][newKeyofKey]);
+                    } else {
+                        newItem.setAttribute(newKeyofKey, rowObj[newKey][newKeyofKey]);
+                    }
+                }
+            }
+        }
+        if (!isInsideLoop) {
+            newUi.innerHTML += newRow.outerHTML;
+        } else {
+            loopHtml.innerHTML += newRow.outerHTML;
+        }
+    }
+
+    if (isInsideLoop) {
+        return loopHtml;
+    }
+    if (!isInsideLoop) {
+        document.querySelector("#ui").replaceWith(newUi);
+    }
+}
+
 // ---------- SUPPORTING FUNCTIONS ----------
 
 function makeId(length) {
@@ -887,6 +1272,13 @@ function makeId(length) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim(); // Never return a text node of whitespace as the result
+    template.innerHTML = html;
+    return template.content.firstChild;
 }
 
 // ---------- MISC ----------
