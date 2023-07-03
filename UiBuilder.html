@@ -25,23 +25,23 @@
         function buildUi() {
             loopUiLayout(uiLayout);
         }
-
+        let consoleLogOn;
+        // consoleLogOn = true;
         function loopUiLayout(uiObj, isInsideLoop) {
             let loopHtml;
             let returnedLoopHtml;
             if (isInsideLoop) {
                 loopHtml = document.createElement("div");
-                loopHtml.classList.add("switch");
-                console.log("------------- START LOOP -------------");
+                consoleLogOn ? console.log("------------- START LOOP -------------") : null;
             }
 
             let newUi = document.createElement("div");
             newUi.id = "ui";
             for (let i = 0; i < uiObj.length; i++) {
                 if (isInsideLoop) {
-                    console.log("----- NEW LOOP ROW -----");
+                    consoleLogOn ? console.log("----- NEW LOOP ROW -----") : null;
                 } else {
-                    console.log("----------------------------- NEW ROW -----------------------------");
+                    consoleLogOn ? console.log("----------------------------- NEW ROW -----------------------------") : null;
                 }
                 let rowObj = uiObj[i];
                 let newRow = htmlToElement(rowObj.template);
@@ -50,22 +50,29 @@
                     // add classes to the row
                     if (newKey === "templateClassList") {
                         for (let l = 0; l < rowObj[newKey].length; l++) {
-                            console.log(newRow, rowObj[newKey][l])
+                            consoleLogOn ? console.log(newRow, rowObj[newKey][l]) : null;
                             newRow.classList.add(rowObj[newKey][l]);
                         }
                     }
                     // add innerHTML/attributes to the row items
                     let newItem = newRow.querySelector(`[obj=${newKey}]`);
+                    if (newRow.hasAttribute("obj")) {
+                        newItem = newRow;
+                    }
                     if (newKey === "loop") {
                         // if property is "loop", replace the item with looped html
-                        newItem.replaceWith(loopUiLayout(rowObj[newKey], true));
+                        let loopedUiLayout = loopUiLayout(rowObj[newKey], true);
+                        loopedUiLayout.setAttribute("class", newItem.getAttribute("class"));
+                        newItem.replaceWith(loopedUiLayout);
                     } else if (newKey !== "template" && newKey !== "templateClassList") {
                         // add innerHTML/attributes to the row items
                         for (let k = 0; k < Object.keys(rowObj[newKey]).length; k++) {
                             let newKeyofKey = Object.keys(rowObj[newKey])[k];
-                            console.log(newKeyofKey, "=", rowObj[newKey][newKeyofKey]);
+                            consoleLogOn ? console.log(newKeyofKey, "=", rowObj[newKey][newKeyofKey]) : null;
                             if (newKeyofKey === "innerHTML") {
                                 newItem.innerHTML = rowObj[newKey][newKeyofKey];
+                            } else if (newKeyofKey === "class") {
+                                newItem.classList.add(...rowObj[newKey][newKeyofKey]);
                             } else {
                                 newItem.setAttribute(newKeyofKey, rowObj[newKey][newKeyofKey]);
                             }
@@ -81,11 +88,11 @@
             // console.log(newUi)
 
             if (isInsideLoop) {
-                console.log("------------- END LOOP -------------");
+                consoleLogOn ? console.log("------------- END LOOP -------------") : null;
                 return loopHtml;
             }
             if (!isInsideLoop) {
-                console.log("------------------------------- END -------------------------------");
+                consoleLogOn ? console.log("------------------------------- END -------------------------------") : null;
                 document.querySelector("#ui").replaceWith(newUi);
             }
         }
@@ -111,11 +118,38 @@
         const toggleSwitchLoop = `<span>
             <input obj="input" type="radio">
             <label obj="label"></label>
-        </span>`
+        </span>`;
+
+        const buttonGroup = `<div class="ui-row">
+            <div obj="label" class="label"></div>
+            <div obj="loop" class="button-group"></div>
+        </div>`;
+        const buttonGroupLoop = `<div obj="button" class="button"></div>`;
 
         const moduleList = `<div class="ui-row">
-            <div obj="label" class="label">Header List</div>
+            <div obj="label" class="label"></div>
             <ul obj="ul" id="header-module-list" class="moduleList"></ul>
+        </div>`;
+
+        const toggle = `<div class="ui-row">
+            <div obj="label" class="label"></div>
+            <div class="toggle">
+                <input obj="input" type="checkbox">
+                <label obj="toggleLabel">
+                    <span></span>
+                </label>
+            </div>
+        </div>`;
+
+        const downloadForm = `<div class="ui-row">
+            <form id="downloadForm">
+                <div class="label">Output HTML</div>
+                <textarea id="fileText" name="htmlText" placeholder="HTML will be output here"></textarea>
+                <div class="button-group">
+                    <input class="button" type="submit" value="Download" onclick="downloadTemplate()">
+                    <input class="button" type="submit" value="Download for each language" onclick="downloadAllTemplates()">
+                </div>
+            </form>
         </div>`;
 
         const uiLayout = [
@@ -179,7 +213,7 @@
             },
             {
                 "template": moduleList,
-                "templateClassList": ["empty", "alex"],
+                "templateClassList": [],
                 "label": {
                     "innerHTML": "Header List",
                 },
@@ -187,7 +221,248 @@
                     "id": "header-module-list",
                 }
             },
+            {
+                "template": buttonGroup,
+                "label": {
+                    "innerHTML": "Modules",
+                },
+                "loop": [
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Dynamic Hero +",
+                            "onclick": "addModule('dynamicHero', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Image Product +",
+                            "onclick": "addModule('imageProduct', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Image Form +",
+                            "onclick": "addModule('imageForm', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Text Form +",
+                            "onclick": "addModule('textForm', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Spacer +",
+                            "onclick": "addModule('spacer', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Intro +",
+                            "onclick": "addModule('intro', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Statement A +",
+                            "onclick": "addModule('statementA', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Statement B +",
+                            "onclick": "addModule('statementB', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Cards +",
+                            "onclick": "addModule('cards', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Infographics +",
+                            "onclick": "addModule('infographics', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Article +",
+                            "onclick": "addModule('article', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Article Two Column +",
+                            "onclick": "addModule('articleTwoColumn', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Side By Side +",
+                            "onclick": "addModule('sideBySide', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Key Numbers +",
+                            "onclick": "addModule('keyNumbers', 'modules')",
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Contact Form +",
+                            "onclick": "addModule('contactForm', 'modules')",
+                        }
+                    },
+                ]
+            },
+            {
+                "template": moduleList,
+                "templateClassList": [],
+                "label": {
+                    "innerHTML": `Module List <span class="collapse-all" onclick="collapseAllSettings()">Collapse All</span><span class="expand-all" onclick="expandAllSettings()">Expand All</span>`,
+                },
+                "ul": {
+                    "id": "main-module-list",
+                }
+            },
+            {
+                "template": toggleSwitch,
+                "label": {
+                    "innerHTML": "Footers",
+                },
+                "loop": [
+                    {
+                        "template": toggleSwitchLoop,
+                        "label": {
+                            "innerHTML": "ENG",
+                            "for": "switch-footer-1",
+                        },
+                        "input": {
+                            "id": "switch-footer-1",
+                            "name": "switch-footer",
+                            "onclick": "addModule('footerENG', 'footer')",
+                        }
+                    },
+                    {
+                        "template": toggleSwitchLoop,
+                        "label": {
+                            "innerHTML": "FR",
+                            "for": "switch-footer-2",
+                        },
+                        "input": {
+                            "id": "switch-footer-2",
+                            "name": "switch-footer",
+                            "onclick": "addModule('footerFR', 'footer')",
+                        }
+                    },
+                    {
+                        "template": toggleSwitchLoop,
+                        "label": {
+                            "innerHTML": "ES",
+                            "for": "switch-footer-3",
+                        },
+                        "input": {
+                            "id": "switch-footer-3",
+                            "name": "switch-footer",
+                            "onclick": "addModule('footerES', 'footer')",
+                        }
+                    },
+                    {
+                        "template": toggleSwitchLoop,
+                        "label": {
+                            "innerHTML": "PT",
+                            "for": "switch-footer-4",
+                        },
+                        "input": {
+                            "id": "switch-footer-4",
+                            "name": "switch-footer",
+                            "onclick": "addModule('footerPT', 'footer')",
+                        }
+                    },
+                ]
+            },
+            {
+                "template": toggle,
+                "label": {
+                    "innerHTML": "Legal",
+                },
+                "input": {
+                    "id": "toggle-legal",
+                    "onclick": "addModule('legal', 'legal', this)",
+                },
+                "toggleLabel": {
+                    "for": "toggle-legal",
+                }
+            },
+            {
+                "template": moduleList,
+                "templateClassList": [],
+                "label": {
+                    "innerHTML": `Footer List`,
+                },
+                "ul": {
+                    "id": "footer-module-list",
+                }
+            },
+            {
+                "template": downloadForm,
+            },
+            {
+                "template": buttonGroup,
+                "label": {
+                    "innerHTML": "Danger Zone (Double-click to trigger)",
+                },
+                "loop": [
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Reset Template",
+                            "ondblclick": "resetTemplate()",
+                            "class": ["alert"],
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "id": "btn-remove-template",
+                            "innerHTML": "Remove Template",
+                            "ondblclick": "removeTemplate()",
+                            "class": ["alert"],
+                        }
+                    },
+                    {
+                        "template": buttonGroupLoop,
+                        "button": {
+                            "innerHTML": "Reset all",
+                            "ondblclick": "clearLocalStorage()",
+                            "class": ["alert"],
+                        }
+                    },
+                ]
+            },
         ];
+
+        // let classesToAdd = ['foo', 'bar', 'baz'];
+        // div.classList.add(...classesToAdd);
 
         buildUi();
     </script>
