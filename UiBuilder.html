@@ -97,7 +97,7 @@
             }
         }
 
-        const dropdownButton = `<div class="ui-row">
+        const uiDropdownButton = `<div class="ui-row">
             <div obj="label" class="label"></div>
             <div class="button-group">
                 <select obj="select" class="select"></select>
@@ -105,33 +105,33 @@
             </div>
         </div>`;
 
-        const textInput = `<div class="ui-row">
+        const uiTextInput = `<div class="ui-row">
             <div obj="label" class="label"></div>
             <input obj="input" type="text">
         </div>`;
 
-        const toggleSwitch = `<div class="ui-row">
+        const uiToggleSwitch = `<div class="ui-row">
             <div obj="label" class="label"></div>
             <div obj="loop" class="switch">
             </div>
         </div>`;
-        const toggleSwitchLoop = `<span>
+        const uiToggleSwitchLoop = `<span>
             <input obj="input" type="radio">
             <label obj="label"></label>
         </span>`;
 
-        const buttonGroup = `<div class="ui-row">
+        const uiButtonGroup = `<div class="ui-row">
             <div obj="label" class="label"></div>
             <div obj="loop" class="button-group"></div>
         </div>`;
-        const buttonGroupLoop = `<div obj="button" class="button"></div>`;
+        const uiButtonGroupLoop = `<div obj="button" class="button"></div>`;
 
-        const moduleList = `<div class="ui-row">
+        const uiModuleList = `<div class="ui-row">
             <div obj="label" class="label"></div>
             <ul obj="ul" id="header-module-list" class="moduleList"></ul>
         </div>`;
 
-        const toggle = `<div class="ui-row">
+        const uiToggle = `<div class="ui-row">
             <div obj="label" class="label"></div>
             <div class="toggle">
                 <input obj="input" type="checkbox">
@@ -141,7 +141,7 @@
             </div>
         </div>`;
 
-        const downloadForm = `<div class="ui-row">
+        const uiDownloadForm = `<div class="ui-row">
             <form id="downloadForm">
                 <div class="label">Output HTML</div>
                 <textarea id="fileText" name="htmlText" placeholder="HTML will be output here"></textarea>
@@ -154,7 +154,7 @@
 
         const uiLayout = [
             {
-                "template": dropdownButton,
+                "template": uiDropdownButton,
                 "label": {
                     "innerHTML": "Templates",
                 },
@@ -168,7 +168,7 @@
                 }
             },
             {
-                "template": textInput,
+                "template": uiTextInput,
                 "label": {
                     "innerHTML": "Template Name",
                 },
@@ -180,13 +180,13 @@
                 }
             },
             {
-                "template": toggleSwitch,
+                "template": uiToggleSwitch,
                 "label": {
                     "innerHTML": "Header",
                 },
                 "loop": [
                     {
-                        "template": toggleSwitchLoop,
+                        "template": uiToggleSwitchLoop,
                         "label": {
                             "innerHTML": "header",
                             "for": "switch-header-1",
@@ -198,7 +198,7 @@
                         }
                     },
                     {
-                        "template": toggleSwitchLoop,
+                        "template": uiToggleSwitchLoop,
                         "label": {
                             "innerHTML": "hero",
                             "for": "switch-header-2",
@@ -212,7 +212,7 @@
                 ]
             },
             {
-                "template": moduleList,
+                "template": uiModuleList,
                 "templateClassList": [],
                 "label": {
                     "innerHTML": "Header List",
@@ -222,111 +222,111 @@
                 }
             },
             {
-                "template": buttonGroup,
+                "template": uiButtonGroup,
                 "label": {
                     "innerHTML": "Modules",
                 },
                 "loop": [
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Dynamic Hero +",
                             "onclick": "addModule('dynamicHero', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Image Product +",
                             "onclick": "addModule('imageProduct', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Image Form +",
                             "onclick": "addModule('imageForm', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Text Form +",
                             "onclick": "addModule('textForm', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Spacer +",
                             "onclick": "addModule('spacer', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Intro +",
                             "onclick": "addModule('intro', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Statement A +",
                             "onclick": "addModule('statementA', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Statement B +",
                             "onclick": "addModule('statementB', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Cards +",
                             "onclick": "addModule('cards', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Infographics +",
                             "onclick": "addModule('infographics', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Article +",
                             "onclick": "addModule('article', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Article Two Column +",
                             "onclick": "addModule('articleTwoColumn', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Side By Side +",
                             "onclick": "addModule('sideBySide', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Key Numbers +",
                             "onclick": "addModule('keyNumbers', 'modules')",
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Contact Form +",
                             "onclick": "addModule('contactForm', 'modules')",
@@ -335,7 +335,7 @@
                 ]
             },
             {
-                "template": moduleList,
+                "template": uiModuleList,
                 "templateClassList": [],
                 "label": {
                     "innerHTML": `Module List <span class="collapse-all" onclick="collapseAllSettings()">Collapse All</span><span class="expand-all" onclick="expandAllSettings()">Expand All</span>`,
@@ -345,13 +345,13 @@
                 }
             },
             {
-                "template": toggleSwitch,
+                "template": uiToggleSwitch,
                 "label": {
                     "innerHTML": "Footers",
                 },
                 "loop": [
                     {
-                        "template": toggleSwitchLoop,
+                        "template": uiToggleSwitchLoop,
                         "label": {
                             "innerHTML": "ENG",
                             "for": "switch-footer-1",
@@ -363,7 +363,7 @@
                         }
                     },
                     {
-                        "template": toggleSwitchLoop,
+                        "template": uiToggleSwitchLoop,
                         "label": {
                             "innerHTML": "FR",
                             "for": "switch-footer-2",
@@ -375,7 +375,7 @@
                         }
                     },
                     {
-                        "template": toggleSwitchLoop,
+                        "template": uiToggleSwitchLoop,
                         "label": {
                             "innerHTML": "ES",
                             "for": "switch-footer-3",
@@ -387,7 +387,7 @@
                         }
                     },
                     {
-                        "template": toggleSwitchLoop,
+                        "template": uiToggleSwitchLoop,
                         "label": {
                             "innerHTML": "PT",
                             "for": "switch-footer-4",
@@ -401,7 +401,7 @@
                 ]
             },
             {
-                "template": toggle,
+                "template": uiToggle,
                 "label": {
                     "innerHTML": "Legal",
                 },
@@ -414,7 +414,7 @@
                 }
             },
             {
-                "template": moduleList,
+                "template": uiModuleList,
                 "templateClassList": [],
                 "label": {
                     "innerHTML": `Footer List`,
@@ -424,16 +424,16 @@
                 }
             },
             {
-                "template": downloadForm,
+                "template": uiDownloadForm,
             },
             {
-                "template": buttonGroup,
+                "template": uiButtonGroup,
                 "label": {
                     "innerHTML": "Danger Zone (Double-click to trigger)",
                 },
                 "loop": [
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Reset Template",
                             "ondblclick": "resetTemplate()",
@@ -441,7 +441,7 @@
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "id": "btn-remove-template",
                             "innerHTML": "Remove Template",
@@ -450,7 +450,7 @@
                         }
                     },
                     {
-                        "template": buttonGroupLoop,
+                        "template": uiButtonGroupLoop,
                         "button": {
                             "innerHTML": "Reset all",
                             "ondblclick": "clearLocalStorage()",
@@ -460,9 +460,6 @@
                 ]
             },
         ];
-
-        // let classesToAdd = ['foo', 'bar', 'baz'];
-        // div.classList.add(...classesToAdd);
 
         buildUi();
     </script>
