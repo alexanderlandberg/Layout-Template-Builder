@@ -238,14 +238,6 @@ async function init() {
     const uiLayout = await getUiLayout();
     buildUiLayout(uiLayout);
 
-    // reinitate query selectors
-    templateSelect = document.querySelector("#templateList");
-    darkmodeToggle = document.querySelector("#toggle-darkmode");
-    headerList = document.querySelector("#header-module-list");
-    moduleList = document.querySelector("#main-module-list");
-    footerList = document.querySelector("#footer-module-list");
-    downloadForm = document.querySelector("#downloadForm");
-
     initTemplate();
     previewSize(state.previewSize);
     previewScale(state.previewZoom);
@@ -412,7 +404,11 @@ function switchTemplate() {
     sharedTemplateFunc();
 }
 
-function sharedTemplateFunc() {
+async function sharedTemplateFunc() {
+    // update ui
+    const uiLayout = await getUiLayout();
+    buildUiLayout(uiLayout);
+
     // set select options
     templateSelect.innerHTML = "";
     for (let i = 0; i < templateList.length; i++) {
@@ -936,7 +932,7 @@ async function getUiLayout() {
                         "id": "switch-header-1",
                         "name": "switch-header",
                         "onclick": "addModule('header', 'header')",
-                        "checked": (templateList[0]?.header[0]?.moduleName === "header"),
+                        "checked": (templateList[currentTemplateIndex]?.header[0]?.moduleName === "header"),
                     }
                 },
                 {
@@ -949,7 +945,7 @@ async function getUiLayout() {
                         "id": "switch-header-2",
                         "name": "switch-header",
                         "onclick": "addModule('hero', 'header')",
-                        "checked": (templateList[0]?.header[0]?.moduleName === "hero"),
+                        "checked": (templateList[currentTemplateIndex]?.header[0]?.moduleName === "hero"),
                     }
                 }
             ]
@@ -1103,7 +1099,7 @@ async function getUiLayout() {
                         "id": "switch-footer-1",
                         "name": "switch-footer",
                         "onclick": "addModule('footerENG', 'footer')",
-                        "checked": (templateList[0]?.footer[0]?.moduleName === "footerENG"),
+                        "checked": (templateList[currentTemplateIndex]?.footer[0]?.moduleName === "footerENG"),
                     }
                 },
                 {
@@ -1116,7 +1112,7 @@ async function getUiLayout() {
                         "id": "switch-footer-2",
                         "name": "switch-footer",
                         "onclick": "addModule('footerFR', 'footer')",
-                        "checked": (templateList[0]?.footer[0]?.moduleName === "footerFR"),
+                        "checked": (templateList[currentTemplateIndex]?.footer[0]?.moduleName === "footerFR"),
                     }
                 },
                 {
@@ -1129,7 +1125,7 @@ async function getUiLayout() {
                         "id": "switch-footer-3",
                         "name": "switch-footer",
                         "onclick": "addModule('footerES', 'footer')",
-                        "checked": (templateList[0]?.footer[0]?.moduleName === "footerES"),
+                        "checked": (templateList[currentTemplateIndex]?.footer[0]?.moduleName === "footerES"),
                     }
                 },
                 {
@@ -1142,7 +1138,7 @@ async function getUiLayout() {
                         "id": "switch-footer-4",
                         "name": "switch-footer",
                         "onclick": "addModule('footerPT', 'footer')",
-                        "checked": (templateList[0]?.footer[0]?.moduleName === "footerPT"),
+                        "checked": (templateList[currentTemplateIndex]?.footer[0]?.moduleName === "footerPT"),
                     }
                 },
             ]
@@ -1273,6 +1269,14 @@ function buildUiLayout(uiObj, isInsideLoop) {
     }
     if (!isInsideLoop) {
         document.querySelector("#ui").replaceWith(newUi);
+
+        // reinitate query selectors
+        templateSelect = document.querySelector("#templateList");
+        darkmodeToggle = document.querySelector("#toggle-darkmode");
+        headerList = document.querySelector("#header-module-list");
+        moduleList = document.querySelector("#main-module-list");
+        footerList = document.querySelector("#footer-module-list");
+        downloadForm = document.querySelector("#downloadForm");
     }
 }
 
