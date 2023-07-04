@@ -213,13 +213,17 @@ const moduleInfo = {
     },
 }
 // default state
+const defaultSharedState = {
+    "templateList": [],
+    "currentTemplateIndex": 0,
+    "previewSize": "full",
+    "previewZoom": "100",
+}
 const defaultState = {
     "header": [],
     "modules": [],
     "footer": [],
     "legal": [],
-    "previewSize": "full",
-    "previewZoom": "100",
     "templateName": "new template",
 }
 
@@ -229,6 +233,11 @@ let currentTemplateIndex = 0;
 
 // state
 let state;
+let sharedState = {
+    "previewSize": "full",
+    "previewZoom": "100",
+    "darkmode": undefined,
+}
 
 // ---------- MAIN FUNCTIONS ----------
 
@@ -239,9 +248,9 @@ async function init() {
     buildUiLayout(uiLayout);
 
     initTemplate();
-    previewSize(state.previewSize);
-    previewScale(state.previewZoom);
     render();
+    previewSize(sharedState.previewSize);
+    previewScale(sharedState.previewZoom);
     initDarkmode();
 }
 
@@ -348,17 +357,28 @@ async function buildTemplate() {
 // ---------- LOCAL STORAGE ----------
 
 function setLocalStorage() {
-    localStorage.setItem("LayoutTemplateBuilderState", JSON.stringify(templateList))
+    sharedState = {
+        "templateList": templateList,
+        "currentTemplateIndex": currentTemplateIndex,
+        "previewSize": sharedState?.previewSize,
+        "previewZoom": sharedState?.previewZoom,
+        "darkmode": sharedState?.darkmode,
+    }
+    localStorage.setItem("LayoutTemplateBuilderState", JSON.stringify(sharedState));
 }
 
 function getLocalStorage() {
     if (localStorage.getItem("LayoutTemplateBuilderState") !== null) {
-        templateList = JSON.parse(localStorage.getItem("LayoutTemplateBuilderState"));
+        sharedState = JSON.parse(localStorage.getItem("LayoutTemplateBuilderState"));
+        templateList = sharedState.templateList;
+        currentTemplateIndex = sharedState.currentTemplateIndex;
     }
 }
 
-function clearLocalStorage() {
-    localStorage.removeItem("LayoutTemplateBuilderState");
+function resetAll() {
+    sharedState.templateList = [];
+    sharedState.currentTemplateIndex = 0;
+    localStorage.setItem("LayoutTemplateBuilderState", JSON.stringify(sharedState));
     location.reload();
 }
 
@@ -862,7 +882,7 @@ function previewSize(size) {
     previewContainer.setAttribute("data-size", `${size}`);
     const selectedValue = document.querySelector(`#switch-screensize-${size}`);
     selectedValue.setAttribute("checked", "checked");
-    state.previewSize = size;
+    sharedState.previewSize = size;
     // disable zoom if not full
     const switchZoom = document.querySelector("#switch-zoom");
     if (size !== "full") {
@@ -884,7 +904,7 @@ function previewScale(scale) {
     previewContainer.setAttribute("data-scale", `${scale}`);
     const selectedValue = document.querySelector(`#switch-zoom-${scale}`);
     selectedValue.setAttribute("checked", "checked");
-    state.previewZoom = scale;
+    sharedState.previewZoom = scale;
     setLocalStorage();
 }
 
@@ -1202,7 +1222,7 @@ async function getUiLayout() {
                     "template": importUiComponents.uiButtonGroupLoop,
                     "button": {
                         "innerHTML": "Reset all",
-                        "ondblclick": "clearLocalStorage()",
+                        "ondblclick": "resetAll()",
                         "class": ["alert"],
                     }
                 },
@@ -1310,25 +1330,25 @@ function htmlToElement(html) {
 // ---------- MISC ----------
 
 function initDarkmode() {
-    if (state.darkmode === undefined) {
+    if (sharedState.darkmode === undefined) {
         // check system prefers-color-scheme
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            state.darkmode = true;
+            sharedState.darkmode = true;
         } else {
-            state.darkmode = false;
+            sharedState.darkmode = false;
         }
     }
-    darkmodeToggle.checked = state.darkmode;
+    darkmodeToggle.checked = sharedState.darkmode;
     setDarkmode();
 }
 
 function setDarkmode() {
     if (darkmodeToggle.checked) {
         document.body.classList.add("dark")
-        state.darkmode = true;
+        sharedState.darkmode = true;
     } else {
         document.body.classList.remove("dark")
-        state.darkmode = false;
+        sharedState.darkmode = false;
     }
     setLocalStorage();
 }
