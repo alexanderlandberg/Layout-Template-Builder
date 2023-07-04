@@ -241,7 +241,6 @@ async function init() {
     initTemplate();
     previewSize(state.previewSize);
     previewScale(state.previewZoom);
-    downloadForm.addEventListener("submit", preventFormSubmit);
     render();
     initDarkmode();
 }
@@ -806,6 +805,7 @@ function downloadTemplate() {
 }
 
 function downloadAllTemplates() {
+    console.log("downloading all templates")
     const currentFooter = state.footer[0].moduleName;
 
     // loop through each footer
@@ -1278,6 +1278,8 @@ function buildUiLayout(uiObj, isInsideLoop) {
         moduleList = document.querySelector("#main-module-list");
         footerList = document.querySelector("#footer-module-list");
         downloadForm = document.querySelector("#downloadForm");
+
+        downloadForm.addEventListener("submit", preventFormSubmit);
     }
 }
 
