@@ -936,6 +936,7 @@ async function getUiLayout() {
                         "id": "switch-header-1",
                         "name": "switch-header",
                         "onclick": "addModule('header', 'header')",
+                        "checked": (templateList[0]?.header[0]?.moduleName === "header"),
                     }
                 },
                 {
@@ -948,6 +949,7 @@ async function getUiLayout() {
                         "id": "switch-header-2",
                         "name": "switch-header",
                         "onclick": "addModule('hero', 'header')",
+                        "checked": (templateList[0]?.header[0]?.moduleName === "hero"),
                     }
                 }
             ]
@@ -1101,6 +1103,7 @@ async function getUiLayout() {
                         "id": "switch-footer-1",
                         "name": "switch-footer",
                         "onclick": "addModule('footerENG', 'footer')",
+                        "checked": (templateList[0]?.footer[0]?.moduleName === "footerENG"),
                     }
                 },
                 {
@@ -1113,6 +1116,7 @@ async function getUiLayout() {
                         "id": "switch-footer-2",
                         "name": "switch-footer",
                         "onclick": "addModule('footerFR', 'footer')",
+                        "checked": (templateList[0]?.footer[0]?.moduleName === "footerFR"),
                     }
                 },
                 {
@@ -1125,6 +1129,7 @@ async function getUiLayout() {
                         "id": "switch-footer-3",
                         "name": "switch-footer",
                         "onclick": "addModule('footerES', 'footer')",
+                        "checked": (templateList[0]?.footer[0]?.moduleName === "footerES"),
                     }
                 },
                 {
@@ -1137,6 +1142,7 @@ async function getUiLayout() {
                         "id": "switch-footer-4",
                         "name": "switch-footer",
                         "onclick": "addModule('footerPT', 'footer')",
+                        "checked": (templateList[0]?.footer[0]?.moduleName === "footerPT"),
                     }
                 },
             ]
@@ -1234,14 +1240,22 @@ function buildUiLayout(uiObj, isInsideLoop) {
                 loopedUiLayout.setAttribute("class", newItem.getAttribute("class"));
                 newItem.replaceWith(loopedUiLayout);
             } else if (newKey !== "template" && newKey !== "templateClassList") {
-                // add innerHTML/attributes to the row items
+                // add values to the row items
                 for (let k = 0; k < Object.keys(rowObj[newKey]).length; k++) {
                     let newKeyofKey = Object.keys(rowObj[newKey])[k];
                     if (newKeyofKey === "innerHTML") {
+                        // innerHTML
                         newItem.innerHTML = rowObj[newKey][newKeyofKey];
                     } else if (newKeyofKey === "class") {
+                        // class
                         newItem.classList.add(...rowObj[newKey][newKeyofKey]);
+                    } else if (newKeyofKey === "checked") {
+                        // checked
+                        if (rowObj[newKey][newKeyofKey]) {
+                            newItem.setAttribute("checked", "checked");
+                        }
                     } else {
+                        // remaining attributes
                         newItem.setAttribute(newKeyofKey, rowObj[newKey][newKeyofKey]);
                     }
                 }

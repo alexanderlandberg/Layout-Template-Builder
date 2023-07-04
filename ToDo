@@ -5,7 +5,9 @@ Prio Medium:
     - (DONE) Add UI JSON file
     - (DONE) Add to current application
     - (DONE) Move UI components to separate js file
-    - Set default states of ui components
+    - (DONE) Set default states of ui components
+    - Update ui states when changing template
 
 Prio Low:
 - Add confirmation promt to reset button
+- Stay on the current template when refreshing page
