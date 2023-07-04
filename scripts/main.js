@@ -406,7 +406,6 @@ function resetTemplate() {
 
 async function sharedTemplateFunc() {
     // update ui
-    console.log("TEST");
     const uiLayout = await getUiLayout();
     buildUiLayout(uiLayout);
 
@@ -1174,6 +1173,7 @@ async function getUiLayout() {
             "template": importUiComponents.uiButtonGroup,
             "label": {
                 "innerHTML": "Danger Zone (Double-click to trigger)",
+                "ondblclick": "dangerZone()",
             },
             "loop": [
                 {
@@ -1324,4 +1324,32 @@ function setDarkmode() {
         state.darkmode = false;
     }
     setLocalStorage();
+}
+
+function dangerZone() {
+
+    var audio = new Audio("https://alexanderlandberg.dk/assets/music/Kenny%20Loggins%20-%20Danger%20Zone.mp3");
+    audio.play();
+
+    let newZone = document.createElement("div");
+    newZone.setAttribute("style", `position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background-image: url(https://consequence.net/wp-content/uploads/2018/06/kenny-loggins-danger-zone.png);
+    background-size: cover;
+    opacity: 0;`);
+    document.body.appendChild(newZone);
+
+    let newZoneOpacity = 0;
+    let timer = setInterval(() => {
+        newZoneOpacity = newZoneOpacity + 0.01;
+        newZone.style.opacity = newZoneOpacity;
+
+        if (newZoneOpacity > 1) {
+            clearInterval(timer);
+        }
+    }, 100);
 }
