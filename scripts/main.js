@@ -1294,6 +1294,13 @@ function buildUiLayout(uiObj, isInsideLoop) {
         return loopHtml;
     }
     if (!isInsideLoop) {
+        // cleanup obj attributes
+        let objAttributes = newUi.querySelectorAll("[obj]");
+        for (let i = 0; i < objAttributes.length; i++) {
+            objAttributes[i].removeAttribute("obj");
+        }
+
+        // append
         document.querySelector("#ui").replaceWith(newUi);
 
         // reinitate query selectors
@@ -1303,7 +1310,6 @@ function buildUiLayout(uiObj, isInsideLoop) {
         moduleList = document.querySelector("#main-module-list");
         footerList = document.querySelector("#footer-module-list");
         downloadForm = document.querySelector("#downloadForm");
-
         downloadForm.addEventListener("submit", preventFormSubmit);
     }
 }
