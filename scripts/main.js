@@ -805,8 +805,7 @@ function downloadTemplate() {
 }
 
 function downloadAllTemplates() {
-    console.log("downloading all templates")
-    const currentFooter = state.footer[0].moduleName;
+    const currentFooter = state.footer[0]?.moduleName;
 
     // loop through each footer
     let i = 0;
@@ -832,7 +831,13 @@ function downloadAllTemplates() {
 
     // reset current footer
     setTimeout(function () {
-        addModule(currentFooter, 'footer');
+        if (currentFooter) {
+            addModule(currentFooter, 'footer');
+        } else {
+            console.log("reset footer");
+            state.footer = [];
+            render();
+        }
     }, (500 * (footerLangs.length + 1)))
 }
 function preventFormSubmit(event) {
