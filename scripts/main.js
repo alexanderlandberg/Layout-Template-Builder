@@ -346,14 +346,6 @@ async function buildTemplate() {
     }
 }
 
-function resetTemplate() {
-    state.header = JSON.parse(JSON.stringify(defaultState)).header;
-    state.modules = JSON.parse(JSON.stringify(defaultState)).modules;
-    state.footer = JSON.parse(JSON.stringify(defaultState)).footer;
-    state.legal = JSON.parse(JSON.stringify(defaultState)).legal;
-    render();
-}
-
 // ---------- LOCAL STORAGE ----------
 
 function setLocalStorage() {
@@ -404,8 +396,17 @@ function switchTemplate() {
     sharedTemplateFunc();
 }
 
+function resetTemplate() {
+    state.header = JSON.parse(JSON.stringify(defaultState)).header;
+    state.modules = JSON.parse(JSON.stringify(defaultState)).modules;
+    state.footer = JSON.parse(JSON.stringify(defaultState)).footer;
+    state.legal = JSON.parse(JSON.stringify(defaultState)).legal;
+    sharedTemplateFunc();
+}
+
 async function sharedTemplateFunc() {
     // update ui
+    console.log("TEST");
     const uiLayout = await getUiLayout();
     buildUiLayout(uiLayout);
 
